@@ -43,7 +43,7 @@ export default function Home() {
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="text-sm border border-zinc-700 rounded-full px-5 py-2.5 hover:bg-zinc-800 transition-colors"
+              className="cursor-pointer text-sm border border-zinc-700 rounded-full px-5 py-2.5 hover:bg-zinc-800 transition-colors"
             >
               Text Us
             </button>
@@ -83,12 +83,27 @@ export default function Home() {
               <div className="mt-10">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="inline-flex items-center justify-center bg-lime-400 hover:bg-lime-300 text-zinc-900 px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
+                  className="cursor-pointer group inline-flex items-center justify-center bg-lime-400 hover:bg-lime-300 text-zinc-900 px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
                 >
                   Text Us
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+                  <span className="relative ml-2 w-5 h-5 overflow-hidden">
+                    <svg
+                      className="w-5 h-5 absolute transition-transform duration-300 ease-out group-hover:translate-x-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                    <svg
+                      className="w-5 h-5 absolute -translate-x-6 transition-transform duration-300 ease-out group-hover:translate-x-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </span>
                 </button>
               </div>
             </FadeIn>
@@ -373,7 +388,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="inline-flex items-center justify-center bg-zinc-900 hover:bg-zinc-800 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-colors"
+                className="cursor-pointer inline-flex items-center justify-center bg-zinc-900 hover:bg-zinc-800 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-colors"
               >
                 Text (347) 617-2607
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -443,7 +458,7 @@ export default function Home() {
             {/* Close Button */}
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
+              className="cursor-pointer absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -466,7 +481,7 @@ export default function Home() {
               <span className="text-2xl font-bold text-lime-400">{phoneNumber}</span>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 px-4 py-2 rounded-lg transition-colors"
+                className="cursor-pointer flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 px-4 py-2 rounded-lg transition-colors"
               >
                 {copied ? (
                   <>
