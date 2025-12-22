@@ -2,6 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const testimonials = [
   {
@@ -54,6 +59,7 @@ export default function TestimonialCards() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
+  // Scroll-triggered entrance animation
   useEffect(() => {
     const container = containerRef.current;
     const cardsContainer = cardsRef.current;
@@ -61,14 +67,39 @@ export default function TestimonialCards() {
 
     const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
-    // Set initial positions
-    cards.forEach((card, index) => {
-      const baseRotation = (index - (cards.length - 1) / 2) * 8;
-      gsap.set(card, {
-        rotation: baseRotation,
-        transformOrigin: "center bottom",
-      });
+    // Set initial state - hidden
+    gsap.set(cards, { opacity: 0, y: 60 });
+
+    const trigger = ScrollTrigger.create({
+      trigger: container,
+      start: "top 80%",
+      onEnter: () => {
+        cards.forEach((card, index) => {
+          const baseRotation = (index - (cards.length - 1) / 2) * 8;
+          gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            rotation: baseRotation,
+            transformOrigin: "center bottom",
+            duration: 0.6,
+            delay: index * 0.1,
+            ease: "back.out(1.4)",
+          });
+        });
+      },
+      once: true,
     });
+
+    return () => trigger.kill();
+  }, []);
+
+  // Mouse interaction effects
+  useEffect(() => {
+    const container = containerRef.current;
+    const cardsContainer = cardsRef.current;
+    if (!container || !cardsContainer) return;
+
+    const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
