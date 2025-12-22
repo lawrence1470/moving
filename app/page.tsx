@@ -24,6 +24,7 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const cardsSectionRef = useRef<HTMLElement>(null);
+  const testimonialSectionRef = useRef<HTMLElement>(null);
 
   // Scroll-triggered parallax for video
   useEffect(() => {
@@ -159,14 +160,18 @@ export default function Home() {
       </section>
 
       {/* Cards Section - Pinned during scroll animation */}
-      <section ref={cardsSectionRef} className="py-12 md:py-20 bg-black border-t-4 border-yellow-400 overflow-hidden">
+      <section ref={cardsSectionRef} className="relative z-20 py-12 md:py-20 bg-black border-t-4 border-yellow-400 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible">
           <CardFan triggerRef={cardsSectionRef} />
         </div>
       </section>
 
-      {/* Testimonial Cards Section */}
-      <TestimonialCards />
+      {/* Testimonial Cards Section - Pinned during scroll animation */}
+      <section ref={testimonialSectionRef} className="relative z-10 py-12 md:py-20 bg-black border-t-4 border-yellow-400 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <TestimonialCards triggerRef={testimonialSectionRef} />
+        </div>
+      </section>
 
       {/* Pricing Section */}
       <ReceiptTape />

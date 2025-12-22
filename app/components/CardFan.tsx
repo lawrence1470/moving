@@ -144,9 +144,9 @@ export default function CardFan({ className = "", triggerRef }: CardFanProps) {
   };
 
   return (
-    <div className={className}>
+    <div className={`${className} min-h-[70vh] flex flex-col justify-center`}>
       {/* Section Header */}
-      <div className="mb-8 md:mb-12">
+      <div className="mb-6 md:mb-8">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-12 h-1 bg-yellow-400" />
           <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
@@ -159,7 +159,7 @@ export default function CardFan({ className = "", triggerRef }: CardFanProps) {
       </div>
 
       {/* Cards Track - horizontal train that slides through */}
-      <div ref={cardsRef} className="overflow-visible">
+      <div ref={cardsRef} className="overflow-visible flex items-center">
         <div
           ref={trackRef}
           className="flex gap-4 sm:gap-6 w-max"
