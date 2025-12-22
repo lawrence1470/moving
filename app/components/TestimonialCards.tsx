@@ -187,7 +187,7 @@ export default function TestimonialCards() {
   return (
     <section
       ref={containerRef}
-      className="relative py-24 px-6 bg-zinc-950 overflow-hidden"
+      className="relative py-24 px-6 bg-black overflow-hidden"
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}

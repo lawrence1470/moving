@@ -25,14 +25,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white overflow-x-hidden">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Hero Section - Split Layout */}
       <section className="min-h-screen relative">
         {/* Header */}
         <header className="absolute top-0 left-0 w-full z-20 px-6 py-5 border-b border-zinc-800">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-lime-400 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
                 <svg className="w-5 h-5 text-zinc-900" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                 </svg>
@@ -40,7 +40,7 @@ export default function Home() {
               <span className="text-lg font-semibold">SwiftMove</span>
             </div>
             <div className="hidden md:flex items-center gap-2 text-zinc-400 text-sm">
-              <span className="w-2 h-2 bg-lime-400 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
               <span>Evening hours • 6PM–1AM</span>
             </div>
             <button
@@ -59,8 +59,8 @@ export default function Home() {
             <FadeIn>
               <div className="inline-flex items-center gap-2 text-sm text-zinc-400 mb-6 bg-zinc-900 rounded-full px-4 py-2 w-max">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-lime-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-lime-400"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-400"></span>
                 </span>
                 Live, taking inquiries now
               </div>
@@ -85,7 +85,7 @@ export default function Home() {
               <div className="mt-10">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="cursor-pointer group inline-flex items-center justify-center bg-lime-400 hover:bg-lime-300 text-zinc-900 px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
+                  className="cursor-pointer group inline-flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 text-zinc-900 px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
                 >
                   Text Us
                   <span className="relative ml-2 w-5 h-5 overflow-hidden">
@@ -113,9 +113,19 @@ export default function Home() {
           </div>
 
           {/* Right - Card Fan Animation */}
-          <div className="relative flex items-center justify-center overflow-visible h-[380px] md:min-h-screen">
+          <div className="relative flex items-center justify-center overflow-hidden h-[380px] md:min-h-screen">
+            {/* Video Backdrop */}
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute top-[72px] left-0 right-0 bottom-0 w-full object-cover"
+            >
+              <source src="/nyc-yellow-cab.mp4" type="video/mp4" />
+            </video>
             <div className="absolute inset-0 bg-zinc-900/50" />
-            <div className="absolute inset-0 bg-gradient-to-br from-lime-400/5 via-transparent to-zinc-900/50" />
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 via-transparent to-zinc-900/50" />
             <CardFan className="scale-[0.7] sm:scale-[0.8] md:scale-90 xl:scale-100" />
           </div>
         </div>
@@ -128,7 +138,7 @@ export default function Home() {
       <ReceiptTape />
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 px-6 bg-zinc-950">
+      <section id="how-it-works" className="py-24 px-6 bg-black">
         <div className="max-w-6xl mx-auto">
           <FadeIn>
             <div className="flex items-center gap-4 mb-6">
@@ -188,7 +198,7 @@ export default function Home() {
                 className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 hover:border-zinc-700 transition-colors"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 bg-lime-400/10 rounded-xl flex items-center justify-center text-lime-400">
+                  <div className="w-12 h-12 bg-yellow-400/10 rounded-xl flex items-center justify-center text-yellow-400">
                     {item.icon}
                   </div>
                   <span className="text-zinc-600 font-mono text-sm">{item.step}</span>
@@ -239,10 +249,10 @@ export default function Home() {
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-semibold mb-1 group-hover:text-lime-400 transition-colors">{service.title}</h3>
+                    <h3 className="font-semibold mb-1 group-hover:text-yellow-400 transition-colors">{service.title}</h3>
                     <p className="text-zinc-500 text-sm">{service.desc}</p>
                   </div>
-                  <svg className="w-5 h-5 text-zinc-600 group-hover:text-lime-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-zinc-600 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -268,7 +278,7 @@ export default function Home() {
                   />
                 </div>
                 <FadeIn delay={0.3} direction="up">
-                  <div className="absolute -bottom-6 -right-6 bg-lime-400 text-zinc-900 p-6 rounded-xl">
+                  <div className="absolute -bottom-6 -right-6 bg-yellow-400 text-zinc-900 p-6 rounded-xl">
                     <div className="text-2xl font-bold">Built on trust</div>
                     <div className="text-sm font-medium">Not contracts</div>
                   </div>
@@ -305,15 +315,15 @@ export default function Home() {
 
               <StaggerContainer className="flex gap-8" stagger={0.1} direction="right">
                 <div>
-                  <div className="text-2xl font-bold text-lime-400">100%</div>
+                  <div className="text-2xl font-bold text-yellow-400">100%</div>
                   <div className="text-sm text-zinc-500">Happy clients</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-lime-400">&lt;5min</div>
+                  <div className="text-2xl font-bold text-yellow-400">&lt;5min</div>
                   <div className="text-sm text-zinc-500">Response time</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-lime-400">24/7</div>
+                  <div className="text-2xl font-bold text-yellow-400">24/7</div>
                   <div className="text-sm text-zinc-500">Text support</div>
                 </div>
               </StaggerContainer>
@@ -326,7 +336,7 @@ export default function Home() {
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <FadeIn distance={80}>
-            <div className="bg-gradient-to-br from-lime-400 to-emerald-500 rounded-3xl p-12 md:p-16 text-center">
+            <div className="bg-gradient-to-br from-yellow-400 to-rose-500 rounded-3xl p-12 md:p-16 text-center">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-zinc-900 mb-6">
                 Ready to move?
               </h2>
@@ -352,7 +362,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-lime-400 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
                 <svg className="w-5 h-5 text-zinc-900" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                 </svg>
@@ -413,7 +423,7 @@ export default function Home() {
             </button>
 
             {/* Icon */}
-            <div className="w-16 h-16 bg-lime-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="w-16 h-16 bg-yellow-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
               <svg className="w-8 h-8 text-zinc-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
@@ -425,14 +435,14 @@ export default function Home() {
 
             {/* Phone Number */}
             <div className="bg-zinc-800 rounded-xl p-4 flex items-center justify-between mb-6">
-              <span className="text-2xl font-bold text-lime-400">{phoneNumber}</span>
+              <span className="text-2xl font-bold text-yellow-400">{phoneNumber}</span>
               <button
                 onClick={handleCopy}
                 className="cursor-pointer flex items-center gap-2 bg-zinc-700 hover:bg-zinc-600 px-4 py-2 rounded-lg transition-colors"
               >
                 {copied ? (
                   <>
-                    <svg className="w-5 h-5 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span className="text-sm font-medium">Copied!</span>
@@ -451,7 +461,7 @@ export default function Home() {
             {/* Direct Text Link */}
             <a
               href="sms:3476172607"
-              className="block w-full bg-lime-400 hover:bg-lime-300 text-zinc-900 py-4 rounded-xl font-semibold text-center transition-colors"
+              className="block w-full bg-yellow-400 hover:bg-yellow-300 text-zinc-900 py-4 rounded-xl font-semibold text-center transition-colors"
             >
               Open Messages App
             </a>

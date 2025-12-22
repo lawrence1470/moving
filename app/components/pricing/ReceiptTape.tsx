@@ -63,7 +63,7 @@ export default function ReceiptTape() {
     <section ref={sectionRef} className="py-24 px-6 bg-zinc-900">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <span className="text-lime-400 text-sm font-semibold tracking-wider uppercase mb-4 block">
+          <span className="text-yellow-400 text-sm font-semibold tracking-wider uppercase mb-4 block">
             Transparent Pricing
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
@@ -80,7 +80,7 @@ export default function ReceiptTape() {
             style={{ fontFamily: "monospace" }}
           >
             {/* Receipt Header */}
-            <div className="bg-lime-400 p-4 text-center">
+            <div className="bg-yellow-400 p-4 text-center">
               <div className="text-xl font-bold tracking-wider">SWIFTMOVE</div>
               <div className="text-xs opacity-70">Manhattan Evening Movers</div>
             </div>
@@ -103,10 +103,10 @@ export default function ReceiptTape() {
                         : "opacity-0 -translate-x-4"
                     }`}
                   >
-                    <span className={item.isDiscount ? "text-lime-600" : ""}>
+                    <span className={item.isDiscount ? "text-yellow-500" : ""}>
                       {item.label}
                     </span>
-                    <span className={item.isDiscount ? "text-lime-600" : ""}>
+                    <span className={item.isDiscount ? "text-yellow-500" : ""}>
                       {item.isDiscount ? "FREE" : `$${item.price}`}
                     </span>
                   </div>
@@ -123,7 +123,7 @@ export default function ReceiptTape() {
                 }`}
               >
                 <span className="text-lg font-bold">TOTAL</span>
-                <span className="text-3xl font-bold text-lime-600">${total}</span>
+                <span className="text-3xl font-bold text-yellow-500">${total}</span>
               </div>
 
               {/* Dotted line */}
