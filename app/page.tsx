@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CardFan from "./components/CardFan";
 import TestimonialCards from "./components/TestimonialCards";
 import {
@@ -13,8 +15,37 @@ import {
 
 import ReceiptTape from "./components/pricing/ReceiptTape";
 
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const cardsSectionRef = useRef<HTMLElement>(null);
+
+  // Scroll-triggered parallax for video
+  useEffect(() => {
+    const video = videoRef.current;
+    const hero = heroRef.current;
+    if (!video || !hero) return;
+
+    const tl = gsap.to(video, {
+      y: 150,
+      ease: "none",
+      scrollTrigger: {
+        trigger: hero,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+    });
+
+    return () => {
+      tl.scrollTrigger?.kill();
+    };
+  }, []);
   const [copied, setCopied] = useState(false);
   const phoneNumber = "(347) 617-2607";
 
@@ -26,14 +57,28 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Hero Section - Split Layout */}
-      <section className="min-h-screen relative">
+      {/* Hero Section - Full Width Video */}
+      <section ref={heroRef} className="min-h-screen relative overflow-hidden">
+        {/* Video Backdrop */}
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/nyc-yellow-cab.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+
         {/* Header */}
-        <header className="absolute top-0 left-0 w-full z-20 px-6 py-5 border-b border-zinc-800">
+        <header className="absolute top-0 left-0 w-full z-20 px-6 py-5 border-b border-white/10">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-zinc-900" fill="currentColor" viewBox="0 0 24 24">
+              <div className="w-8 h-8 bg-yellow-400 flex items-center justify-center">
+                <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                 </svg>
               </div>
@@ -45,19 +90,18 @@ export default function Home() {
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer text-sm border border-zinc-700 rounded-full px-5 py-2.5 hover:bg-zinc-800 transition-colors"
+              className="cursor-pointer text-sm border border-white/20 px-5 py-2.5 hover:bg-white/10 transition-colors"
             >
               Text Us
             </button>
           </div>
         </header>
 
-        {/* Split Content */}
-        <div className="grid md:grid-cols-2 min-h-screen">
-          {/* Left - Text Content */}
-          <div className="flex flex-col justify-center px-6 md:px-12 xl:px-20 pt-24 pb-8 md:py-0">
+        {/* Hero Content */}
+        <div className="relative z-10 min-h-screen flex items-center">
+          <div className="px-6 md:px-12 xl:px-20 max-w-4xl">
             <FadeIn>
-              <div className="inline-flex items-center gap-2 text-sm text-zinc-400 mb-6 bg-zinc-900 rounded-full px-4 py-2 w-max">
+              <div className="inline-flex items-center gap-2 text-sm text-zinc-300 mb-6 bg-white/10 backdrop-blur-sm px-4 py-2 w-max border border-white/10">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-400"></span>
@@ -68,14 +112,14 @@ export default function Home() {
 
             <HeroText
               lines={[
-                { text: "Move on your", className: "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold" },
-                { text: "schedule, not ours.", className: "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-zinc-500" },
+                { text: "Move on your", className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black" },
+                { text: "schedule, not ours.", className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white/50" },
               ]}
               delay={0.2}
             />
 
             <FadeIn delay={0.5}>
-              <p className="text-zinc-400 text-lg lg:text-xl mt-8 max-w-lg leading-relaxed">
+              <p className="text-zinc-300 text-lg lg:text-xl mt-8 max-w-xl leading-relaxed">
                 Evening apartment moves in Manhattan. 6PM to 1AM, every day.
                 Just text us and we&apos;ll handle the rest.
               </p>
@@ -85,9 +129,10 @@ export default function Home() {
               <div className="mt-10">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="cursor-pointer group inline-flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 text-zinc-900 px-8 py-4 rounded-xl font-semibold text-lg transition-colors"
+                  className="cursor-pointer group inline-flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-4 font-bold text-lg transition-colors border-4 border-black"
+                  style={{ boxShadow: '4px 4px 0px 0px #000' }}
                 >
-                  Text Us
+                  TEXT US NOW
                   <span className="relative ml-2 w-5 h-5 overflow-hidden">
                     <svg
                       className="w-5 h-5 absolute transition-transform duration-300 ease-out group-hover:translate-x-6"
@@ -109,25 +154,14 @@ export default function Home() {
                 </button>
               </div>
             </FadeIn>
-
           </div>
+        </div>
+      </section>
 
-          {/* Right - Card Fan Animation */}
-          <div className="relative flex items-center justify-center overflow-hidden h-[380px] md:min-h-screen">
-            {/* Video Backdrop */}
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute top-[72px] left-0 right-0 bottom-0 w-full object-cover"
-            >
-              <source src="/nyc-yellow-cab.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-zinc-900/50" />
-            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 via-transparent to-zinc-900/50" />
-            <CardFan className="scale-[0.7] sm:scale-[0.8] md:scale-90 xl:scale-100" />
-          </div>
+      {/* Cards Section - Pinned during scroll animation */}
+      <section ref={cardsSectionRef} className="py-12 md:py-20 bg-black border-t-4 border-yellow-400 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible">
+          <CardFan triggerRef={cardsSectionRef} />
         </div>
       </section>
 

@@ -1,206 +1,209 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const cards = [
   {
     id: 1,
     title: "EVENING",
     subtitle: "HOURS",
-    benefit: "6PM - 1AM",
-    color: "#DC2626",
-    icon: (
-      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-      </svg>
-    ),
+    benefit: "6PM-1AM",
+    description: "Move after work, not during. We operate when you're free.",
+    number: "01",
+    color: "yellow",
   },
   {
     id: 2,
     title: "FAST",
     subtitle: "RESPONSE",
-    benefit: "Under 5 min",
-    color: "#EA580C",
-    icon: (
-      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
+    benefit: "<5 MIN",
+    description: "Text us and get a real reply in minutes, not hours.",
+    number: "02",
+    color: "black",
   },
   {
     id: 3,
     title: "FULLY",
     subtitle: "INSURED",
-    benefit: "100% Protected",
-    color: "#16A34A",
-    icon: (
-      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
+    benefit: "100%",
+    description: "Your belongings are protected. No exceptions.",
+    number: "03",
+    color: "white",
   },
   {
     id: 4,
     title: "TEXT",
     subtitle: "TO BOOK",
-    benefit: "No apps needed",
-    color: "#0D9488",
-    icon: (
-      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-      </svg>
-    ),
+    benefit: "NO APP",
+    description: "No downloads, no accounts. Just text and you're booked.",
+    number: "04",
+    color: "yellow",
   },
 ];
 
 interface CardFanProps {
   className?: string;
+  triggerRef?: React.RefObject<HTMLElement | null>;
 }
 
-export default function CardFan({ className = "" }: CardFanProps) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+export default function CardFan({ className = "", triggerRef }: CardFanProps) {
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
+  // Scroll-triggered horizontal train animation
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 200);
-    return () => clearTimeout(timer);
-  }, []);
+    const track = trackRef.current;
+    const trigger = triggerRef?.current;
+    if (!track || !trigger) return;
 
-  const totalCards = cards.length;
+    // Calculate how far to move the track (total width of all cards minus viewport)
+    const updateAnimation = () => {
+      const trackWidth = track.scrollWidth;
+      const containerWidth = track.parentElement?.clientWidth || window.innerWidth;
+      const moveDistance = trackWidth - containerWidth + 40; // Extra padding
+
+      // Kill existing ScrollTrigger for this trigger
+      ScrollTrigger.getAll().forEach(st => {
+        if (st.vars.trigger === trigger) st.kill();
+      });
+
+      // Train animation - cards slide in from right to left
+      gsap.set(track, { x: containerWidth }); // Start off-screen right
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: trigger,
+          start: "top 15%",
+          end: `+=${moveDistance + 600}`, // Scroll distance = track movement + buffer
+          scrub: 0.5,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
+
+      // Slide the entire track from right to left
+      tl.to(track, {
+        x: -moveDistance,
+        ease: "none",
+      });
+    };
+
+    // Run on mount and resize
+    updateAnimation();
+    window.addEventListener("resize", updateAnimation);
+
+    return () => {
+      window.removeEventListener("resize", updateAnimation);
+      ScrollTrigger.getAll().forEach(st => {
+        if (st.vars.trigger === trigger) st.kill();
+      });
+    };
+  }, [triggerRef]);
+
+  const getCardStyles = (color: string) => {
+    switch (color) {
+      case "yellow":
+        return {
+          bg: "bg-yellow-400",
+          text: "text-black",
+          subtext: "text-black/60",
+          badge: "bg-black text-yellow-400",
+          border: "border-black",
+        };
+      case "black":
+        return {
+          bg: "bg-black",
+          text: "text-white",
+          subtext: "text-white/60",
+          badge: "bg-yellow-400 text-black",
+          border: "border-yellow-400",
+        };
+      case "white":
+        return {
+          bg: "bg-white",
+          text: "text-black",
+          subtext: "text-black/50",
+          badge: "bg-black text-white",
+          border: "border-black",
+        };
+      default:
+        return {
+          bg: "bg-yellow-400",
+          text: "text-black",
+          subtext: "text-black/60",
+          badge: "bg-black text-yellow-400",
+          border: "border-black",
+        };
+    }
+  };
 
   return (
-    <div className={`relative w-full h-[400px] md:h-[500px] flex items-center justify-center ${className}`}>
-      <div className="relative" style={{ width: "450px", height: "340px" }}>
-        {cards.map((card, index) => {
-          const spreadAngle = 12;
-          const spreadX = 65;
-
-          const centerOffset = (totalCards - 1) / 2;
-          const relativeIndex = index - centerOffset;
-
-          const baseRotation = relativeIndex * spreadAngle;
-          const baseX = relativeIndex * spreadX;
-          const baseY = Math.pow(Math.abs(relativeIndex), 1.5) * 8;
-
-          const baseZ = index + 1;
-
-          const isHovered = activeIndex === index;
-          const isOtherHovered = activeIndex !== null && activeIndex !== index;
-
-          return (
-            <motion.div
-              key={card.id}
-              className="absolute cursor-pointer origin-bottom"
-              style={{
-                left: "50%",
-                bottom: "0%",
-                zIndex: isHovered ? 100 : baseZ,
-              }}
-              initial={{
-                x: "-50%",
-                y: 100,
-                rotate: 0,
-                opacity: 0,
-                scale: 0.8,
-              }}
-              animate={{
-                x: `calc(-50% + ${baseX}px)`,
-                y: isHovered ? -40 : baseY,
-                rotate: isHovered ? 0 : baseRotation,
-                opacity: isLoaded ? (isOtherHovered ? 0.7 : 1) : 0,
-                scale: isHovered ? 1.08 : 1,
-              }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 30,
-                delay: isLoaded && !activeIndex ? index * 0.08 : 0,
-              }}
-              onMouseEnter={() => setActiveIndex(index)}
-              onMouseLeave={() => setActiveIndex(null)}
-            >
-              <motion.div
-                className="relative overflow-hidden shadow-2xl"
-                style={{
-                  width: "180px",
-                  height: "260px",
-                  backgroundColor: card.color,
-                  borderRadius: "16px",
-                }}
-                whileHover={{
-                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-                }}
-              >
-                {/* Top label */}
-                <div className="absolute top-4 left-4 right-4">
-                  <div
-                    className="text-[9px] font-semibold tracking-[0.2em] uppercase"
-                    style={{ color: card.dark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.6)" }}
-                  >
-                    SwiftMove
-                  </div>
-                </div>
-
-                {/* Center icon */}
-                <div
-                  className="absolute inset-0 flex items-center justify-center"
-                  style={{ color: card.dark ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.25)" }}
-                >
-                  {card.icon}
-                </div>
-
-                {/* Bottom content */}
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div
-                    className="text-[32px] font-black leading-[0.9] tracking-tight"
-                    style={{ color: card.dark ? "#18181b" : "#ffffff" }}
-                  >
-                    {card.title}
-                  </div>
-                  <div
-                    className="text-[11px] font-bold tracking-[0.1em] mt-1 uppercase"
-                    style={{ color: card.dark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.7)" }}
-                  >
-                    {card.subtitle}
-                  </div>
-                  <div
-                    className="text-[10px] font-medium mt-3 py-1.5 px-2.5 rounded-full inline-block"
-                    style={{
-                      backgroundColor: card.dark ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.2)",
-                      color: card.dark ? "rgba(0,0,0,0.8)" : "rgba(255,255,255,0.9)"
-                    }}
-                  >
-                    {card.benefit}
-                  </div>
-                </div>
-
-                {/* Decorative corner */}
-                <div
-                  className="absolute top-4 right-4 w-6 h-6 rounded-md"
-                  style={{ backgroundColor: card.dark ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.2)" }}
-                />
-
-                {/* Gradient overlay */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.15) 100%)",
-                  }}
-                />
-              </motion.div>
-            </motion.div>
-          );
-        })}
+    <div className={className}>
+      {/* Section Header */}
+      <div className="mb-8 md:mb-12">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-1 bg-yellow-400" />
+          <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
+        </div>
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white">
+          THE SWIFTMOVE
+          <br />
+          <span className="text-yellow-400">DIFFERENCE</span>
+        </h2>
       </div>
 
-      {/* Glow effect */}
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[300px] h-[100px] blur-3xl opacity-30"
-        style={{
-          background: "linear-gradient(90deg, #DC2626, #EA580C, #16A34A, #0D9488, #A3E635)",
-        }}
-      />
+      {/* Cards Track - horizontal train that slides through */}
+      <div ref={cardsRef} className="overflow-visible">
+        <div
+          ref={trackRef}
+          className="flex gap-4 sm:gap-6 w-max"
+        >
+          {cards.map((card) => {
+            const styles = getCardStyles(card.color);
+
+            return (
+              <div
+                key={card.id}
+                className={`benefit-card ${styles.bg} ${styles.border} border-4 p-5 sm:p-6
+                  w-[280px] sm:w-[320px] flex-shrink-0
+                `}
+                style={{ boxShadow: '6px 6px 0px 0px #000' }}
+              >
+              {/* Number */}
+              <div className={`font-mono text-xs ${styles.subtext} mb-6`}>
+                {card.number}
+              </div>
+
+              {/* Title */}
+              <div className={`text-5xl sm:text-6xl font-black leading-[0.85] tracking-tighter ${styles.text}`}>
+                {card.title}
+              </div>
+              <div className={`text-sm font-bold tracking-[0.15em] mt-1 ${styles.subtext} uppercase`}>
+                {card.subtitle}
+              </div>
+
+              {/* Description */}
+              <p className={`mt-4 text-sm leading-relaxed ${styles.subtext}`}>
+                {card.description}
+              </p>
+
+              {/* Benefit Badge */}
+              <div className="mt-4">
+                <div className={`${styles.badge} font-mono text-sm font-bold py-2 px-4 inline-block`}>
+                  {card.benefit}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        </div>
+      </div>
     </div>
   );
 }
