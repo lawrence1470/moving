@@ -87,7 +87,7 @@ export default function Home() {
                   <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                 </svg>
               </div>
-              <span className="text-lg font-semibold">SwiftMove</span>
+              <span className="text-lg font-semibold">Walk-up Experts</span>
             </div>
             <div className="hidden md:flex items-center gap-2 text-zinc-400 text-sm">
               <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
@@ -348,7 +348,7 @@ export default function Home() {
 
               <FadeIn direction="right" delay={0.2}>
                 <p className="text-zinc-400 leading-relaxed mb-6">
-                  We&apos;re a small company of close friends who started SwiftMove after years of helping each other move apartments around the city. We saw how broken the moving industry is—big companies upcharge on everything and hire people who don&apos;t really care about you. They&apos;re just there for a paycheck.
+                  We&apos;re a small company of close friends who started Walk-up Experts after years of helping each other move apartments around the city. We saw how broken the moving industry is—big companies upcharge on everything and hire people who don&apos;t really care about you. They&apos;re just there for a paycheck.
                 </p>
               </FadeIn>
 
@@ -417,7 +417,7 @@ export default function Home() {
                   <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                 </svg>
               </div>
-              <span className="text-lg font-semibold">SwiftMove</span>
+              <span className="text-lg font-semibold">Walk-up Experts</span>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6 md:gap-12 text-sm text-zinc-400">
@@ -428,7 +428,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 pt-8 border-t border-zinc-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
-            <p>© 2024 SwiftMove. All rights reserved.</p>
+            <p>© 2024 Walk-up Experts. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-white transition-colors">Privacy</a>
               <a href="#" className="hover:text-white transition-colors">Terms</a>
