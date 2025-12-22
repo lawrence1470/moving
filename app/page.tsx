@@ -12,6 +12,7 @@ import {
   StaggerContainer,
   HeroText,
 } from "./components/animations";
+import { HeroDoodles, Mascot, SectionDoodles } from "./components/Doodles";
 
 import ReceiptTape from "./components/pricing/ReceiptTape";
 
@@ -73,6 +74,9 @@ export default function Home() {
         </video>
         <div className="absolute inset-0 bg-black/60" />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
+
+        {/* Floating Doodles */}
+        <HeroDoodles />
 
         {/* Header */}
         <header className="absolute top-0 left-0 w-full z-20 px-6 py-5 border-b border-white/10">
@@ -177,8 +181,10 @@ export default function Home() {
       <ReceiptTape />
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 px-6 bg-black">
-        <div className="max-w-6xl mx-auto">
+      <section id="how-it-works" className="py-24 px-6 bg-black relative overflow-hidden">
+        {/* Section Doodles */}
+        <SectionDoodles />
+        <div className="max-w-6xl mx-auto relative z-10">
           <FadeIn>
             <div className="flex items-center gap-4 mb-6">
               <span className="text-zinc-500 font-mono text-sm">[01]</span>
@@ -375,7 +381,9 @@ export default function Home() {
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
           <FadeIn distance={80}>
-            <div className="bg-gradient-to-br from-yellow-400 to-rose-500 rounded-3xl p-12 md:p-16 text-center">
+            <div className="bg-gradient-to-br from-yellow-400 to-rose-500 rounded-3xl p-12 md:p-16 text-center relative overflow-hidden">
+              {/* CTA Doodles */}
+              <SectionDoodles variant="cta" />
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-zinc-900 mb-6">
                 Ready to move?
               </h2>
@@ -395,6 +403,9 @@ export default function Home() {
           </FadeIn>
         </div>
       </section>
+
+      {/* Floating Mascot */}
+      <Mascot />
 
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-12 px-6">
