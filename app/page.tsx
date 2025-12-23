@@ -136,7 +136,7 @@ export default function Home() {
         <div className="relative z-10 min-h-screen flex items-center">
           <div className="px-6 md:px-12 xl:px-20 max-w-4xl">
             <FadeIn>
-              <div className="inline-flex items-center gap-2 text-sm text-zinc-300 mb-6 bg-white/10 backdrop-blur-sm px-4 py-2 w-max border border-white/10">
+              <div className="inline-flex items-center gap-2 text-sm text-zinc-300 mb-4 md:mb-6 bg-white/10 backdrop-blur-sm px-4 py-2 w-max border border-white/10">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow-400"></span>
@@ -175,17 +175,17 @@ export default function Home() {
             />
 
             <FadeIn delay={0.5}>
-              <p className="text-zinc-300 text-lg lg:text-xl mt-8 max-w-xl leading-relaxed">
+              <p className="text-zinc-300 text-base lg:text-xl mt-5 md:mt-8 max-w-xl leading-relaxed">
                 Apartment moves in Manhattan. Weekdays 5PM-1AM, weekends 6AM-1AM.
                 Just text us and we&apos;ll handle the rest.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.6}>
-              <div className="mt-10">
+              <div className="mt-6 md:mt-10">
                 <a
                   href="sms:3476172607"
-                  className="group inline-flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-4 font-bold text-lg transition-colors border-4 border-black"
+                  className="group inline-flex items-center justify-center bg-yellow-400 hover:bg-yellow-300 text-black px-6 py-3 md:px-8 md:py-4 font-bold text-base md:text-lg transition-colors border-4 border-black"
                   style={{ boxShadow: '4px 4px 0px 0px #000' }}
                 >
                   TEXT US NOW
@@ -200,16 +200,16 @@ export default function Home() {
 
             {/* Mobile truck icon - drives off on scroll */}
             <FadeIn delay={0.7}>
-              <div className="mt-8 md:hidden flex justify-center">
+              <div className="mt-4 md:hidden flex justify-center">
                 <div
                   id="mobile-truck"
-                  className="w-48 h-48"
+                  className="w-32 h-32"
                 >
                   <Image
                     src="/doodles/moving-truck.svg"
                     alt="Moving truck"
-                    width={200}
-                    height={200}
+                    width={128}
+                    height={128}
                     className="w-full h-full opacity-90"
                   />
                 </div>
@@ -218,13 +218,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Visual bridge to next section */}
-        <SectionBridge
-          fromColor="transparent"
-          toColor="rgba(0,0,0,0.9)"
-          height="150px"
-          position="bottom"
-        />
       </section>
 
       {/* Cards Section */}
