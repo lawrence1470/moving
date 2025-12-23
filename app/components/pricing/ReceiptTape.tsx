@@ -131,7 +131,7 @@ export default function ReceiptTape() {
               <div className="text-[10px] md:text-xs text-zinc-500 mb-2 md:mb-4 font-bold">STUDIO APARTMENT MOVE • {HOURS_WORKED} HOURS</div>
 
               {/* Line Items */}
-              <div className="space-y-2 md:space-y-3 min-h-[120px] md:min-h-[180px]">
+              <div className="space-y-2 md:space-y-3 min-h-[160px] md:min-h-[220px]">
                 {receiptItems.map((item, index) => (
                   <div
                     key={item.label}
