@@ -1,0 +1,33 @@
+<svg viewBox="0 0 240 70" xmlns="http://www.w3.org/2000/svg">
+  <!-- Concept 3: Bold text with integrated stairs in the A -->
+
+  <!-- Yellow background shape -->
+  <rect x="5" y="8" width="230" height="54" fill="#FDE047" stroke="#231F20" stroke-width="3" rx="3"/>
+
+  <!-- WALK-UP with custom A as stairs -->
+  <g fill="#231F20">
+    <!-- W -->
+    <path d="M15 18 L22 50 L29 30 L36 50 L43 18" fill="none" stroke="#231F20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- A as stairs -->
+    <path d="M52 50 L52 40 L60 40 L60 30 L68 30 L68 18 L76 18 L76 50" fill="none" stroke="#231F20" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+
+    <!-- L -->
+    <path d="M85 18 L85 50 L100 50" fill="none" stroke="#231F20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- K -->
+    <path d="M108 18 L108 50 M108 34 L122 18 M108 34 L122 50" fill="none" stroke="#231F20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- hyphen -->
+    <path d="M130 34 L140 34" stroke="#231F20" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- U -->
+    <path d="M148 18 L148 42 Q148 50 158 50 Q168 50 168 42 L168 18" fill="none" stroke="#231F20" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- P -->
+    <path d="M178 50 L178 18 Q178 18 188 18 Q198 18 198 28 Q198 38 188 38 L178 38" fill="none" stroke="#231F20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- PROS smaller below -->
+  <text x="205" y="56" font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#231F20" transform="rotate(-90, 220, 45)">PROS</text>
+</svg>

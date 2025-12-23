@@ -82,7 +82,7 @@ export function Mascot() {
       <div className="relative">
         <Image
           src="/doodles/doodle-02.svg"
-          alt="Walk-up Experts Mascot"
+          alt="Walk-up Pros Mascot"
           width={80}
           height={80}
           className="drop-shadow-lg"

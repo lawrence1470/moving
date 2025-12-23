@@ -219,7 +219,7 @@ export default function TestimonialCards() {
   };
 
   return (
-    <section ref={sectionRef} className="relative z-30 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center" style={{ isolation: 'isolate' }}>
+    <section ref={sectionRef} className="relative z-20 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center" style={{ isolation: 'isolate' }}>
       <div ref={containerRef} className="max-w-7xl mx-auto px-4 md:px-6 w-full flex flex-col justify-center">
       {/* Header */}
       <div className="mb-8">

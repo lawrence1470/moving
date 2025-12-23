@@ -85,7 +85,7 @@ export default function ReceiptTape() {
   }, [isClient]);
 
   return (
-    <section ref={sectionRef} className="relative z-40 min-h-screen bg-zinc-900 border-t-4 border-yellow-400 flex items-center" style={{ isolation: 'isolate' }}>
+    <section ref={sectionRef} className="relative z-30 min-h-screen bg-zinc-900 border-t-4 border-yellow-400 flex items-center" style={{ isolation: 'isolate' }}>
       <div className="max-w-4xl mx-auto px-6 w-full">
         <div ref={headerRef} className="text-center mb-16">
           <span className="text-yellow-400 text-sm font-semibold tracking-wider uppercase mb-4 block">
@@ -106,7 +106,7 @@ export default function ReceiptTape() {
           >
             {/* Receipt Header */}
             <div className="bg-yellow-400 p-4 text-center border-b-4 border-black">
-              <div className="text-xl font-black tracking-wider">WALK-UP EXPERTS</div>
+              <div className="text-xl font-black tracking-wider">WALK-UP PROS</div>
               <div className="text-xs font-bold opacity-70">Manhattan Evening Movers</div>
             </div>
 
@@ -129,7 +129,7 @@ export default function ReceiptTape() {
                       {item.label}
                     </span>
                     <span className={item.isDiscount ? "text-yellow-600 font-bold" : "font-bold"}>
-                      {item.isDiscount ? "FREE" : `$${item.price}`}
+                      {item.isDiscount ? "FREE" : `$${item.price}/hr`}
                     </span>
                   </div>
                 ))}

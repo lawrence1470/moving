@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Walk-up Experts | NYC Evening Movers",
+  title: "Walk-up Pros | NYC Evening Movers",
   description: "Evening apartment moves in Manhattan. 6PM to 1AM, every day. Text us and we'll handle the rest.",
 };
 

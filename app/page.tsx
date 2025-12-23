@@ -14,8 +14,6 @@ import {
   HeroText,
 } from "./components/animations";
 import { HeroDoodles, Mascot, SectionDoodles } from "./components/Doodles";
-import WhyMovingSucks from "./components/WhyMovingSucks";
-
 import ReceiptTape from "./components/pricing/ReceiptTape";
 
 // Inline pizza component for hero text
@@ -104,16 +102,9 @@ export default function Home() {
         <HeroDoodles />
 
         {/* Header */}
-        <header className="absolute top-0 left-0 w-full z-20 px-6 py-5 border-b border-white/10">
+        <header className="absolute top-0 left-0 w-full z-20 px-6 py-4 border-b border-white/10">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-yellow-400 flex items-center justify-center">
-                <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-                </svg>
-              </div>
-              <span className="text-lg font-semibold">Walk-up Experts</span>
-            </div>
+            <Image src="/logo.svg" alt="Walk-up Pros" width={192} height={56} className="h-10 w-auto" />
             <div className="hidden md:flex items-center gap-2 text-zinc-400 text-sm">
               <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
               <span>Evening hours • 6PM–1AM</span>
@@ -158,12 +149,9 @@ export default function Home() {
                 {
                   content: (
                     <>
-                      {/* Option C: Pizza replacing the period */}
                       <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>schedule,</span>
                       <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>not</span>
-                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>
-                        ours<InlinePizza size="0.6em" />
-                      </span>
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>ours.</span>
                     </>
                   ),
                   className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white/50"
@@ -187,21 +175,10 @@ export default function Home() {
                   style={{ boxShadow: '4px 4px 0px 0px #000' }}
                 >
                   TEXT US NOW
-                  <span className="relative ml-2 w-6 h-6 overflow-hidden">
-                    <Image
-                      src="/doodles/pizza.svg"
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="w-6 h-6 absolute transition-all duration-300 ease-out group-hover:translate-x-8 group-hover:rotate-45"
-                    />
-                    <Image
-                      src="/doodles/pizza.svg"
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="w-6 h-6 absolute -translate-x-8 transition-all duration-300 ease-out group-hover:translate-x-0 group-hover:rotate-45"
-                    />
+                  <span className="ml-3 inline-block group-hover:animate-[wobble_0.5s_ease-in-out_infinite]">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12H19M19 12L13 6M19 12L13 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
                   </span>
                 </button>
               </div>
@@ -209,9 +186,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Why Moving Sucks Section */}
-      <WhyMovingSucks />
 
       {/* Cards Section */}
       <CardFan />
@@ -390,7 +364,7 @@ export default function Home() {
 
               <FadeIn direction="right" delay={0.2}>
                 <p className="text-zinc-400 leading-relaxed mb-6">
-                  We&apos;re a small company of close friends who started Walk-up Experts after years of helping each other move apartments around the city. We saw how broken the moving industry is—big companies upcharge on everything and hire people who don&apos;t really care about you. They&apos;re just there for a paycheck.
+                  We&apos;re a small company of close friends who started Walk-up Pros after years of helping each other move apartments around the city. We saw how broken the moving industry is—big companies upcharge on everything and hire people who don&apos;t really care about you. They&apos;re just there for a paycheck.
                 </p>
               </FadeIn>
 
@@ -459,7 +433,7 @@ export default function Home() {
                   <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
                 </svg>
               </div>
-              <span className="text-lg font-semibold">Walk-up Experts</span>
+              <span className="text-lg font-semibold">Walk-up Pros</span>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6 md:gap-12 text-sm text-zinc-400">
@@ -470,7 +444,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 pt-8 border-t border-zinc-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-500">
-            <p>© 2024 Walk-up Experts. All rights reserved.</p>
+            <p>© 2024 Walk-up Pros. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-white transition-colors">Privacy</a>
               <a href="#" className="hover:text-white transition-colors">Terms</a>

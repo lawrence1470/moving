@@ -142,7 +142,7 @@ export default function CardFan() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-20 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center"
+      className="relative z-10 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center"
       style={{ isolation: 'isolate' }}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible w-full">
