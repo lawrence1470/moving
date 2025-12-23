@@ -104,20 +104,24 @@ export function SectionDoodles({ variant = "default" }: { variant?: "default" | 
   if (variant === "cta") {
     return (
       <>
-        {/* Thumbs up - approval/trust */}
-        <Doodle
-          src="/doodles/doodle-101.svg"
-          className="absolute -top-8 -left-8 opacity-80"
-          size={60}
-          rotate={-15}
-        />
-        {/* Heart - love NYC */}
-        <Doodle
-          src="/doodles/doodle-65.svg"
-          className="absolute -bottom-8 -right-8 opacity-80"
-          size={55}
-          rotate={10}
-        />
+        {/* Thumbs up - top left corner */}
+        <div className="absolute top-4 left-4 md:top-6 md:left-6 opacity-70 w-10 h-10 md:w-16 md:h-16">
+          <Doodle
+            src="/doodles/doodle-101.svg"
+            className="w-full h-full"
+            size={64}
+            rotate={-15}
+          />
+        </div>
+        {/* Heart - bottom right corner */}
+        <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 opacity-70 w-10 h-10 md:w-14 md:h-14">
+          <Doodle
+            src="/doodles/doodle-65.svg"
+            className="w-full h-full"
+            size={56}
+            rotate={10}
+          />
+        </div>
       </>
     );
   }

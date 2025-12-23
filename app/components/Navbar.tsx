@@ -23,7 +23,7 @@ export default function Navbar() {
   const navLinks = [
     { label: "About Us", href: "/about", rotate: "-2deg" },
     { label: "Pricing", href: isHome ? "#pricing" : "/#pricing", rotate: "1.5deg" },
-    { label: "FAQ", href: isHome ? "#faq" : "/#faq", rotate: "-1deg" },
+    { label: "Blog", href: "/blog", rotate: "-1deg" },
   ];
 
   return (
