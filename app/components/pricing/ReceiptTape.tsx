@@ -162,7 +162,7 @@ export default function ReceiptTape() {
               {/* Footer */}
               <div ref={footerRef} className="text-center text-xs text-zinc-500">
                 <div className="mb-2 font-bold">No hidden fees. Ever.</div>
-                <div className="text-zinc-400">Evening Hours: 6PM - 1AM</div>
+                <div className="text-zinc-400">M-F 5PM-1AM • Weekends 6AM-1AM</div>
               </div>
             </div>
 
