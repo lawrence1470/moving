@@ -105,20 +105,20 @@ export function SectionDoodles({ variant = "default" }: { variant?: "default" | 
     return (
       <>
         {/* Thumbs up - top left corner */}
-        <div className="absolute top-4 left-4 md:top-6 md:left-6 opacity-70 w-10 h-10 md:w-16 md:h-16">
+        <div className="absolute top-4 left-4 md:top-6 md:left-6 lg:top-8 lg:left-8 opacity-70 w-16 h-16 md:w-20 md:h-20 lg:w-40 lg:h-40">
           <Doodle
             src="/doodles/doodle-101.svg"
             className="w-full h-full"
-            size={64}
+            size={160}
             rotate={-15}
           />
         </div>
         {/* Heart - bottom right corner */}
-        <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 opacity-70 w-10 h-10 md:w-14 md:h-14">
+        <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 lg:bottom-8 lg:right-8 opacity-70 w-14 h-14 md:w-20 md:h-20 lg:w-36 lg:h-36">
           <Doodle
             src="/doodles/doodle-65.svg"
             className="w-full h-full"
-            size={56}
+            size={144}
             rotate={10}
           />
         </div>
