@@ -67,70 +67,66 @@ const scatteredPositions = [
   { x: 480, y: 80, rotation: 65, scale: 0.5 },
 ];
 
-interface TestimonialCardsProps {
-  triggerRef?: React.RefObject<HTMLElement | null>;
-}
-
-export default function TestimonialCards({ triggerRef }: TestimonialCardsProps) {
+export default function TestimonialCards() {
+  const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
 
   // Magnetic pull scroll animation
   useEffect(() => {
+    const section = sectionRef.current;
     const container = containerRef.current;
     const cardsContainer = cardsRef.current;
-    const trigger = triggerRef?.current;
-    if (!container || !cardsContainer || !trigger) return;
+    if (!section || !container || !cardsContainer) return;
 
     const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
-    // Set initial scattered state - fully hidden until animation starts
-    cards.forEach((card, index) => {
-      const scattered = scatteredPositions[index];
-      gsap.set(card, {
-        x: scattered.x,
-        y: scattered.y,
-        rotation: scattered.rotation,
-        scale: scattered.scale,
-        opacity: 0,
+    const ctx = gsap.context(() => {
+      // Set initial scattered state - fully hidden until animation starts
+      cards.forEach((card, index) => {
+        const scattered = scatteredPositions[index];
+        gsap.set(card, {
+          x: scattered.x,
+          y: scattered.y,
+          rotation: scattered.rotation,
+          scale: scattered.scale,
+          opacity: 0,
+        });
       });
-    });
 
-    // Create magnetic pull timeline - starts when section reaches top of viewport
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: trigger,
-        start: "top top",
-        end: "+=800",
-        scrub: 0.8,
-        pin: true,
-        anticipatePin: 1,
-        onLeave: () => setAnimationComplete(true),
-        onEnterBack: () => setAnimationComplete(false),
-      },
-    });
+      // Create magnetic pull timeline - pinned with scrub
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "+=100%",
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.8,
+          onLeave: () => setAnimationComplete(true),
+          onEnterBack: () => setAnimationComplete(false),
+        },
+      });
 
-    // Animate each card to its fan position (wider spread)
-    cards.forEach((card, index) => {
-      const baseRotation = (index - (cards.length - 1) / 2) * 18;
+      // Animate each card to its fan position (wider spread)
+      cards.forEach((card, index) => {
+        const baseRotation = (index - (cards.length - 1) / 2) * 18;
 
-      tl.to(card, {
-        x: 0,
-        y: 0,
-        rotation: baseRotation,
-        scale: 1,
-        opacity: 1,
-        duration: 1,
-        ease: "power3.out",
-      }, index * 0.08); // Staggered timing
-    });
+        tl.to(card, {
+          x: 0,
+          y: 0,
+          rotation: baseRotation,
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+        }, index * 0.08);
+      });
+    }, section);
 
-    return () => {
-      tl.scrollTrigger?.kill();
-      tl.kill();
-    };
-  }, [triggerRef]);
+    return () => ctx.revert();
+  }, []);
 
   // Mouse interaction effects (only active after animation completes)
   useEffect(() => {
@@ -223,7 +219,8 @@ export default function TestimonialCards({ triggerRef }: TestimonialCardsProps) 
   };
 
   return (
-    <div ref={containerRef} className="relative min-h-[80vh] flex flex-col justify-center">
+    <section ref={sectionRef} className="relative z-30 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center" style={{ isolation: 'isolate' }}>
+      <div ref={containerRef} className="max-w-7xl mx-auto px-4 md:px-6 w-full flex flex-col justify-center">
       {/* Header */}
       <div className="mb-8">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
@@ -325,6 +322,7 @@ export default function TestimonialCards({ triggerRef }: TestimonialCardsProps) 
           Our customers always love us — <span className="text-yellow-400 font-semibold">100% satisfaction</span>
         </p>
       </div>
-    </div>
+      </div>
+    </section>
   );
 }

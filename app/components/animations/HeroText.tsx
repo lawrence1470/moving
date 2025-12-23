@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, ReactNode } from "react";
 import gsap from "gsap";
 
 interface HeroTextProps {
   lines: Array<{
-    text: string;
+    text?: string;
+    content?: ReactNode;
     className?: string;
   }>;
   className?: string;
@@ -59,6 +60,28 @@ export default function HeroText({
     };
   }, [delay, lineDelay, wordDelay]);
 
+  const renderLineContent = (line: { text?: string; content?: ReactNode }) => {
+    // If content is provided (ReactNode), render it directly
+    if (line.content) {
+      return line.content;
+    }
+
+    // Otherwise, split text into words
+    if (line.text) {
+      return line.text.split(" ").map((word, wordIndex) => (
+        <span
+          key={wordIndex}
+          className="hero-word inline-block mr-[0.25em]"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {word}
+        </span>
+      ));
+    }
+
+    return null;
+  };
+
   return (
     <div
       ref={containerRef}
@@ -70,15 +93,7 @@ export default function HeroText({
           key={lineIndex}
           className={`hero-line overflow-hidden ${line.className || ""}`}
         >
-          {line.text.split(" ").map((word, wordIndex) => (
-            <span
-              key={wordIndex}
-              className="hero-word inline-block mr-[0.25em]"
-              style={{ transformStyle: "preserve-3d" }}
-            >
-              {word}
-            </span>
-          ))}
+          {renderLineContent(line)}
         </div>
       ))}
     </div>

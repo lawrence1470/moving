@@ -9,60 +9,85 @@ if (typeof window !== "undefined") {
 }
 
 const receiptItems = [
-  { label: "2 Professional Movers", price: 99, delay: 0 },
-  { label: "Moving Truck", price: 40, delay: 0.4 },
-  { label: "Equipment & Padding", price: 10, delay: 0.8 },
-  { label: "Evening Discount", price: 0, isDiscount: true, delay: 1.2 },
+  { label: "2 Professional Movers", price: 99 },
+  { label: "Moving Truck", price: 40 },
+  { label: "Equipment & Padding", price: 10 },
+  { label: "Evening Discount", price: 0, isDiscount: true },
 ];
 
 export default function ReceiptTape() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
-  const [visibleItems, setVisibleItems] = useState<number[]>([]);
-  const [showTotal, setShowTotal] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const totalRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+  const [isClient, setIsClient] = useState(false);
 
   const total = receiptItems.reduce((sum, item) => sum + (item.isDiscount ? 0 : item.price), 0);
 
   useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isClient) return;
+
     const section = sectionRef.current;
-    if (!section || hasAnimated) return;
+    const receipt = receiptRef.current;
+    const header = headerRef.current;
+    const totalEl = totalRef.current;
+    const footer = footerRef.current;
+    if (!section || !receipt || !header || !totalEl || !footer) return;
 
-    const trigger = ScrollTrigger.create({
-      trigger: section,
-      start: "top 70%",
-      onEnter: () => {
-        if (hasAnimated) return;
-        setHasAnimated(true);
+    const ctx = gsap.context(() => {
+      // Set initial states
+      gsap.set(header, { opacity: 0, y: -30 });
+      gsap.set(receipt, { opacity: 0, y: 50, scale: 0.9 });
+      gsap.set(itemRefs.current, { opacity: 0, x: -20 });
+      gsap.set(totalEl, { opacity: 0, scale: 0.8 });
+      gsap.set(footer, { opacity: 0 });
 
-        // Animate receipt sliding down
-        gsap.fromTo(
-          receiptRef.current,
-          { y: -50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }
-        );
+      // Create timeline - pinned with scrub
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "+=100%",
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.5,
+        },
+      });
 
-        // Reveal items one by one with typewriter effect
-        receiptItems.forEach((item, index) => {
-          setTimeout(() => {
-            setVisibleItems((prev) => [...prev, index]);
-          }, item.delay * 1000 + 600);
-        });
+      // Animation sequence
+      tl
+        // Header fades in
+        .to(header, { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" })
+        // Receipt slides up
+        .to(receipt, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.4)" })
+        // Items appear one by one
+        .to(itemRefs.current[0], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" })
+        .to(itemRefs.current[1], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" }, "-=0.05")
+        .to(itemRefs.current[2], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" }, "-=0.05")
+        .to(itemRefs.current[3], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" }, "-=0.05")
+        // Pause for effect
+        .to({}, { duration: 0.1 })
+        // Total pops in
+        .to(totalEl, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" })
+        // Footer fades in
+        .to(footer, { opacity: 1, duration: 0.2, ease: "power2.out" });
+    }, section);
 
-        // Show total last
-        setTimeout(() => {
-          setShowTotal(true);
-        }, 2200);
-      },
-    });
-
-    return () => trigger.kill();
-  }, [hasAnimated]);
+    return () => {
+      ctx.revert();
+    };
+  }, [isClient]);
 
   return (
-    <section ref={sectionRef} className="py-24 px-6 bg-zinc-900">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
+    <section ref={sectionRef} className="relative z-40 min-h-screen bg-zinc-900 border-t-4 border-yellow-400 flex items-center" style={{ isolation: 'isolate' }}>
+      <div className="max-w-4xl mx-auto px-6 w-full">
+        <div ref={headerRef} className="text-center mb-16">
           <span className="text-yellow-400 text-sm font-semibold tracking-wider uppercase mb-4 block">
             Transparent Pricing
           </span>
@@ -76,13 +101,13 @@ export default function ReceiptTape() {
         <div className="flex justify-center">
           <div
             ref={receiptRef}
-            className="bg-zinc-100 text-zinc-900 w-full max-w-sm rounded-lg shadow-2xl overflow-hidden"
-            style={{ fontFamily: "monospace" }}
+            className="bg-zinc-100 text-zinc-900 w-full max-w-sm border-4 border-black overflow-hidden"
+            style={{ fontFamily: "monospace", boxShadow: "8px 8px 0px 0px #000" }}
           >
             {/* Receipt Header */}
-            <div className="bg-yellow-400 p-4 text-center">
-              <div className="text-xl font-bold tracking-wider">SWIFTMOVE</div>
-              <div className="text-xs opacity-70">Manhattan Evening Movers</div>
+            <div className="bg-yellow-400 p-4 text-center border-b-4 border-black">
+              <div className="text-xl font-black tracking-wider">WALK-UP EXPERTS</div>
+              <div className="text-xs font-bold opacity-70">Manhattan Evening Movers</div>
             </div>
 
             {/* Receipt Body */}
@@ -90,23 +115,20 @@ export default function ReceiptTape() {
               {/* Dotted line */}
               <div className="border-b-2 border-dashed border-zinc-300 mb-4" />
 
-              <div className="text-xs text-zinc-500 mb-4">STUDIO APARTMENT MOVE</div>
+              <div className="text-xs text-zinc-500 mb-4 font-bold">STUDIO APARTMENT MOVE</div>
 
               {/* Line Items */}
               <div className="space-y-3 min-h-[160px]">
                 {receiptItems.map((item, index) => (
                   <div
                     key={item.label}
-                    className={`flex justify-between text-sm transition-all duration-300 ${
-                      visibleItems.includes(index)
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 -translate-x-4"
-                    }`}
+                    ref={(el) => { itemRefs.current[index] = el; }}
+                    className="flex justify-between text-sm"
                   >
-                    <span className={item.isDiscount ? "text-yellow-500" : ""}>
+                    <span className={item.isDiscount ? "text-yellow-600 font-bold" : ""}>
                       {item.label}
                     </span>
-                    <span className={item.isDiscount ? "text-yellow-500" : ""}>
+                    <span className={item.isDiscount ? "text-yellow-600 font-bold" : "font-bold"}>
                       {item.isDiscount ? "FREE" : `$${item.price}`}
                     </span>
                   </div>
@@ -117,25 +139,17 @@ export default function ReceiptTape() {
               <div className="border-b-2 border-dashed border-zinc-300 my-4" />
 
               {/* Total */}
-              <div
-                className={`flex justify-between items-center transition-all duration-500 ${
-                  showTotal ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                }`}
-              >
-                <span className="text-lg font-bold">TOTAL</span>
-                <span className="text-3xl font-bold text-yellow-500">${total}</span>
+              <div ref={totalRef} className="flex justify-between items-center">
+                <span className="text-lg font-black">TOTAL</span>
+                <span className="text-3xl font-black text-yellow-500">${total}/hr</span>
               </div>
 
               {/* Dotted line */}
               <div className="border-b-2 border-dashed border-zinc-300 my-4" />
 
               {/* Footer */}
-              <div
-                className={`text-center text-xs text-zinc-500 transition-all duration-500 delay-300 ${
-                  showTotal ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                <div className="mb-2">No hidden fees. Ever.</div>
+              <div ref={footerRef} className="text-center text-xs text-zinc-500">
+                <div className="mb-2 font-bold">No hidden fees. Ever.</div>
                 <div className="text-zinc-400">Evening Hours: 6PM - 1AM</div>
               </div>
             </div>

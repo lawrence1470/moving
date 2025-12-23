@@ -24,3 +24,22 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* GSAP ScrollTrigger pin-spacer z-index fixes */
+.pin-spacer {
+  z-index: inherit !important;
+}
+
+/* Ensure pinned sections stack correctly */
+.pin-spacer:has(> .z-10) {
+  z-index: 10 !important;
+}
+.pin-spacer:has(> .z-20) {
+  z-index: 20 !important;
+}
+.pin-spacer:has(> .z-30) {
+  z-index: 30 !important;
+}
+.pin-spacer:has(> .z-40) {
+  z-index: 40 !important;
+}

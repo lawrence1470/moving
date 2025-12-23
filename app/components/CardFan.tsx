@@ -47,51 +47,49 @@ const cards = [
   },
 ];
 
-interface CardFanProps {
-  className?: string;
-  triggerRef?: React.RefObject<HTMLElement | null>;
-}
-
-export default function CardFan({ className = "", triggerRef }: CardFanProps) {
+export default function CardFan() {
+  const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   // Scroll-triggered horizontal train animation
   useEffect(() => {
+    const section = sectionRef.current;
     const track = trackRef.current;
-    const trigger = triggerRef?.current;
-    if (!track || !trigger) return;
+    if (!section || !track) return;
+
+    let ctx: gsap.Context;
 
     // Calculate how far to move the track (total width of all cards minus viewport)
     const updateAnimation = () => {
       const trackWidth = track.scrollWidth;
       const containerWidth = track.parentElement?.clientWidth || window.innerWidth;
-      const moveDistance = trackWidth - containerWidth + 40; // Extra padding
+      const moveDistance = trackWidth - containerWidth + 40;
 
-      // Kill existing ScrollTrigger for this trigger
-      ScrollTrigger.getAll().forEach(st => {
-        if (st.vars.trigger === trigger) st.kill();
-      });
+      // Clean up previous context
+      if (ctx) ctx.revert();
 
-      // Train animation - cards slide in from right to left
-      gsap.set(track, { x: containerWidth }); // Start off-screen right
+      ctx = gsap.context(() => {
+        // Train animation - cards slide in from right to left
+        gsap.set(track, { x: containerWidth });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: trigger,
-          start: "top 15%",
-          end: `+=${moveDistance + 600}`, // Scroll distance = track movement + buffer
-          scrub: 0.5,
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "+=100%",
+            pin: true,
+            pinSpacing: true,
+            scrub: 0.5,
+          },
+        });
 
-      // Slide the entire track from right to left
-      tl.to(track, {
-        x: -moveDistance,
-        ease: "none",
-      });
+        // Slide the entire track from right to left
+        tl.to(track, {
+          x: -moveDistance,
+          ease: "none",
+        });
+      }, section);
     };
 
     // Run on mount and resize
@@ -100,11 +98,9 @@ export default function CardFan({ className = "", triggerRef }: CardFanProps) {
 
     return () => {
       window.removeEventListener("resize", updateAnimation);
-      ScrollTrigger.getAll().forEach(st => {
-        if (st.vars.trigger === trigger) st.kill();
-      });
+      if (ctx) ctx.revert();
     };
-  }, [triggerRef]);
+  }, []);
 
   const getCardStyles = (color: string) => {
     switch (color) {
@@ -144,26 +140,31 @@ export default function CardFan({ className = "", triggerRef }: CardFanProps) {
   };
 
   return (
-    <div className={`${className} min-h-[70vh] flex flex-col justify-center`}>
-      {/* Section Header */}
-      <div className="mb-6 md:mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-1 bg-yellow-400" />
-          <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
+    <section
+      ref={sectionRef}
+      className="relative z-20 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center"
+      style={{ isolation: 'isolate' }}
+    >
+      <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible w-full">
+        {/* Section Header */}
+        <div className="mb-6 md:mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-12 h-1 bg-yellow-400" />
+            <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white">
+            THE WALK-UP
+            <br />
+            <span className="text-yellow-400">EXPERTS</span>
+          </h2>
         </div>
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white">
-          THE SWIFTMOVE
-          <br />
-          <span className="text-yellow-400">DIFFERENCE</span>
-        </h2>
-      </div>
 
-      {/* Cards Track - horizontal train that slides through */}
-      <div ref={cardsRef} className="overflow-visible flex items-center">
-        <div
-          ref={trackRef}
-          className="flex gap-4 sm:gap-6 w-max"
-        >
+        {/* Cards Track - horizontal train that slides through */}
+        <div ref={cardsRef} className="overflow-visible flex items-center">
+          <div
+            ref={trackRef}
+            className="flex gap-4 sm:gap-6 w-max"
+          >
           {cards.map((card) => {
             const styles = getCardStyles(card.color);
 
@@ -202,8 +203,9 @@ export default function CardFan({ className = "", triggerRef }: CardFanProps) {
             </div>
           );
         })}
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

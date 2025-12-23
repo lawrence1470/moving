@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CardFan from "./components/CardFan";
@@ -13,8 +14,25 @@ import {
   HeroText,
 } from "./components/animations";
 import { HeroDoodles, Mascot, SectionDoodles } from "./components/Doodles";
+import WhyMovingSucks from "./components/WhyMovingSucks";
 
 import ReceiptTape from "./components/pricing/ReceiptTape";
+
+// Inline pizza component for hero text
+function InlinePizza({ size = "1em" }: { size?: string }) {
+  return (
+    <span className="inline-block align-middle" style={{ width: size, height: size }}>
+      <Image
+        src="/doodles/pizza.svg"
+        alt=""
+        width={100}
+        height={100}
+        className="w-full h-full object-contain animate-spin-slow"
+        style={{ animationDuration: "8s" }}
+      />
+    </span>
+  );
+}
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -24,8 +42,6 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroRef = useRef<HTMLElement>(null);
-  const cardsSectionRef = useRef<HTMLElement>(null);
-  const testimonialSectionRef = useRef<HTMLElement>(null);
 
   // Scroll-triggered parallax for video
   useEffect(() => {
@@ -48,6 +64,15 @@ export default function Home() {
       tl.scrollTrigger?.kill();
     };
   }, []);
+
+  // Refresh ScrollTrigger after all components mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [copied, setCopied] = useState(false);
   const phoneNumber = "(347) 617-2607";
 
@@ -117,8 +142,32 @@ export default function Home() {
 
             <HeroText
               lines={[
-                { text: "Move on your", className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black" },
-                { text: "schedule, not ours.", className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white/50" },
+                {
+                  content: (
+                    <>
+                      {/* Option A: Pizza as the "o" in Move */}
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>
+                        M<InlinePizza size="0.75em" />ve
+                      </span>
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>on</span>
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>your</span>
+                    </>
+                  ),
+                  className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black"
+                },
+                {
+                  content: (
+                    <>
+                      {/* Option C: Pizza replacing the period */}
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>schedule,</span>
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>not</span>
+                      <span className="hero-word inline-block mr-[0.25em]" style={{ transformStyle: "preserve-3d" }}>
+                        ours<InlinePizza size="0.6em" />
+                      </span>
+                    </>
+                  ),
+                  className: "text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black text-white/50"
+                },
               ]}
               delay={0.2}
             />
@@ -138,23 +187,21 @@ export default function Home() {
                   style={{ boxShadow: '4px 4px 0px 0px #000' }}
                 >
                   TEXT US NOW
-                  <span className="relative ml-2 w-5 h-5 overflow-hidden">
-                    <svg
-                      className="w-5 h-5 absolute transition-transform duration-300 ease-out group-hover:translate-x-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                    <svg
-                      className="w-5 h-5 absolute -translate-x-6 transition-transform duration-300 ease-out group-hover:translate-x-0"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
+                  <span className="relative ml-2 w-6 h-6 overflow-hidden">
+                    <Image
+                      src="/doodles/pizza.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="w-6 h-6 absolute transition-all duration-300 ease-out group-hover:translate-x-8 group-hover:rotate-45"
+                    />
+                    <Image
+                      src="/doodles/pizza.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      className="w-6 h-6 absolute -translate-x-8 transition-all duration-300 ease-out group-hover:translate-x-0 group-hover:rotate-45"
+                    />
                   </span>
                 </button>
               </div>
@@ -163,19 +210,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Cards Section - Pinned during scroll animation */}
-      <section ref={cardsSectionRef} className="relative z-20 py-12 md:py-20 bg-black border-t-4 border-yellow-400 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible">
-          <CardFan triggerRef={cardsSectionRef} />
-        </div>
-      </section>
+      {/* Why Moving Sucks Section */}
+      <WhyMovingSucks />
 
-      {/* Testimonial Cards Section - Pinned during scroll animation */}
-      <section ref={testimonialSectionRef} className="relative z-10 py-12 md:py-20 bg-black border-t-4 border-yellow-400 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <TestimonialCards triggerRef={testimonialSectionRef} />
-        </div>
-      </section>
+      {/* Cards Section */}
+      <CardFan />
+
+      {/* Testimonial Cards Section */}
+      <TestimonialCards />
 
       {/* Pricing Section */}
       <ReceiptTape />
