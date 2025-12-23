@@ -5,6 +5,8 @@ import path from "path";
 import matter from "gray-matter";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { useMDXComponents } from "../../../mdx-components";
+import ArticleSchema from "../../components/ArticleSchema";
+import BreadcrumbSchema from "../../components/BreadcrumbSchema";
 
 interface BlogPostProps {
   params: Promise<{ slug: string }>;
@@ -88,8 +90,23 @@ export default async function BlogPostPage({ params }: BlogPostProps) {
 
   const components = useMDXComponents({});
 
+  const breadcrumbs = [
+    { name: "Home", url: "https://walkuppros.com" },
+    { name: "Blog", url: "https://walkuppros.com/blog" },
+    { name: post.frontmatter.title, url: `https://walkuppros.com/blog/${slug}` },
+  ];
+
   return (
     <div className="min-h-screen bg-black text-white pt-24">
+      <ArticleSchema
+        title={post.frontmatter.title}
+        description={post.frontmatter.description}
+        datePublished={post.frontmatter.date}
+        slug={slug}
+        keywords={post.frontmatter.keywords || []}
+      />
+      <BreadcrumbSchema items={breadcrumbs} />
+
       {/* Article Header */}
       <header className="py-12 px-6 border-b border-zinc-800">
         <div className="max-w-3xl mx-auto">

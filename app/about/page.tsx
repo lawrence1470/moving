@@ -50,19 +50,6 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              {/* Stats Block */}
-              <div className="mt-12 grid grid-cols-3 gap-4">
-                {[
-                  { value: "100%", label: "HAPPY" },
-                  { value: "<5m", label: "REPLY" },
-                  { value: "24/7", label: "TEXT" },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center p-4 border border-zinc-800">
-                    <div className="text-2xl font-black text-yellow-400">{stat.value}</div>
-                    <div className="text-[10px] text-zinc-500 tracking-wider mt-1">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
             </motion.div>
 
             {/* Center Column - GIF with Overlay */}

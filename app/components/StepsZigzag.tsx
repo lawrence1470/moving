@@ -376,11 +376,11 @@ export default function StepsZigzag() {
   const getIcon = (index: number) => {
     switch (index) {
       case 0:
-        return <PhoneIcon className="w-6 h-6" />;
+        return <PhoneIcon className="w-4 h-4 md:w-6 md:h-6" />;
       case 1:
-        return <ClipboardIcon className="w-6 h-6" />;
+        return <ClipboardIcon className="w-4 h-4 md:w-6 md:h-6" />;
       case 2:
-        return <CheckIcon className="w-6 h-6" />;
+        return <CheckIcon className="w-4 h-4 md:w-6 md:h-6" />;
       default:
         return null;
     }
@@ -393,15 +393,15 @@ export default function StepsZigzag() {
       className="relative z-40 min-h-screen bg-black border-t-4 border-yellow-400 flex items-center overflow-hidden"
       style={{ isolation: 'isolate' }}
     >
-      <div className="max-w-6xl mx-auto px-6 relative w-full pt-16 md:pt-20">
+      <div className="max-w-6xl mx-auto px-6 relative w-full pt-10 md:pt-20">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-8 md:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+        <div ref={headerRef} className="text-center mb-4 md:mb-12">
+          <h2 className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2">
             Three steps to your
             <br />
             <span className="text-zinc-500">stress-free move.</span>
           </h2>
-          <p className="text-zinc-400 text-sm md:text-base max-w-xl mx-auto">
+          <p className="text-zinc-400 text-xs md:text-base max-w-xl mx-auto">
             No complicated booking systems. No waiting on hold. Just text us.
           </p>
         </div>
@@ -427,7 +427,7 @@ export default function StepsZigzag() {
 
         {/* Mobile dotted line - vertical */}
         <svg
-          className="absolute left-1/2 -translate-x-1/2 top-[38%] w-4 h-[45%] pointer-events-none md:hidden"
+          className="absolute left-1/2 -translate-x-1/2 top-[32%] w-4 h-[50%] pointer-events-none md:hidden"
           viewBox="0 0 10 200"
           fill="none"
           preserveAspectRatio="none"
@@ -445,7 +445,7 @@ export default function StepsZigzag() {
         </svg>
 
         {/* Steps Cards - Horizontal on desktop, vertical on mobile */}
-        <div className="relative z-10 flex flex-col items-center md:flex-row md:justify-center md:items-start gap-4 md:gap-6">
+        <div className="relative z-10 flex flex-col items-center md:flex-row md:justify-center md:items-start gap-2 md:gap-6">
           {steps.map((step, index) => {
             const styles = getCardStyles(step.color);
             const isExpanded = expandedCard === step.id;
@@ -456,8 +456,8 @@ export default function StepsZigzag() {
                 ref={(el) => { cardsRef.current[index] = el; }}
                 onClick={() => toggleCard(step.id)}
                 className={`
-                  ${styles.bg} ${styles.border} border-4
-                  w-full max-w-[280px] md:max-w-[300px] flex-shrink-0
+                  ${styles.bg} ${styles.border} border-3 md:border-4
+                  w-full max-w-[260px] md:max-w-[300px] flex-shrink-0
                   cursor-pointer select-none
                   transition-shadow duration-300
                   hover:shadow-xl
@@ -467,19 +467,19 @@ export default function StepsZigzag() {
                 }}
               >
                   {/* Card Header - Always visible */}
-                  <div className="p-5 md:p-6">
-                    <div className="flex items-start justify-between mb-4">
+                  <div className="p-3 md:p-6">
+                    <div className="flex items-start justify-between mb-2 md:mb-4">
                       {/* Icon */}
                       <div
                         ref={(el) => { iconRefs.current[index] = el; }}
-                        className={`${styles.iconBg} ${styles.iconText} w-12 h-12 rounded-full flex items-center justify-center border-[3px] border-black`}
+                        className={`${styles.iconBg} ${styles.iconText} w-9 h-9 md:w-12 md:h-12 rounded-full flex items-center justify-center border-2 md:border-[3px] border-black`}
                       >
                         {getIcon(index)}
                       </div>
                       {/* Number - Stamp effect target */}
                       <span
                         ref={(el) => { numberRefs.current[index] = el; }}
-                        className={`text-5xl md:text-6xl font-black ${styles.text}`}
+                        className={`text-4xl md:text-6xl font-black ${styles.text}`}
                         style={{ opacity: 0.2 }}
                       >
                         {step.number}
@@ -487,22 +487,22 @@ export default function StepsZigzag() {
                     </div>
 
                     {/* Title */}
-                    <h3 className={`text-2xl md:text-3xl font-black ${styles.text} tracking-tight mb-1`}>
+                    <h3 className={`text-lg md:text-3xl font-black ${styles.text} tracking-tight mb-0.5 md:mb-1`}>
                       {step.title}
                     </h3>
 
                     {/* Short description - when collapsed */}
                     {!isExpanded && (
-                      <p className={`${styles.subtext} text-sm font-medium`}>
+                      <p className={`${styles.subtext} text-xs md:text-sm font-medium`}>
                         {step.shortDesc}
                       </p>
                     )}
 
                     {/* Tap hint - when collapsed */}
                     {!isExpanded && (
-                      <div className={`mt-4 flex items-center gap-2 ${styles.subtext} text-xs font-bold`}>
+                      <div className={`mt-2 md:mt-4 flex items-center gap-2 ${styles.subtext} text-[10px] md:text-xs font-bold`}>
                         <span>TAP TO LEARN MORE</span>
-                        <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 md:w-4 md:h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </div>
