@@ -100,11 +100,11 @@ export default function ReceiptTape() {
   return (
     <section ref={sectionRef} className="relative z-30 min-h-screen bg-zinc-900 border-t-4 border-yellow-400 flex items-center" style={{ isolation: 'isolate' }}>
       <div className="max-w-4xl mx-auto px-6 w-full">
-        <div ref={headerRef} className="text-center mb-16">
-          <span className="text-yellow-400 text-sm font-semibold tracking-wider uppercase mb-4 block">
+        <div ref={headerRef} className="text-center mb-6 md:mb-16">
+          <span className="text-yellow-400 text-xs md:text-sm font-semibold tracking-wider uppercase mb-2 md:mb-4 block">
             Transparent Pricing
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 md:mb-4">
             Moving doesn&apos;t need to
             <br />
             <span className="text-zinc-500">be expensive.</span>
@@ -118,30 +118,30 @@ export default function ReceiptTape() {
             style={{ fontFamily: "monospace", boxShadow: "8px 8px 0px 0px #000" }}
           >
             {/* Receipt Header */}
-            <div className="bg-yellow-400 p-4 text-center border-b-4 border-black">
-              <div className="text-xl font-black tracking-wider">WALK-UP PROS</div>
-              <div className="text-xs font-bold opacity-70">Manhattan Evening Movers</div>
+            <div className="bg-yellow-400 p-3 md:p-4 text-center border-b-4 border-black">
+              <div className="text-lg md:text-xl font-black tracking-wider">WALK-UP PROS</div>
+              <div className="text-[10px] md:text-xs font-bold opacity-70">Manhattan Evening Movers</div>
             </div>
 
             {/* Receipt Body */}
-            <div className="p-6">
+            <div className="p-4 md:p-6">
               {/* Dotted line */}
-              <div className="border-b-2 border-dashed border-zinc-300 mb-4" />
+              <div className="border-b-2 border-dashed border-zinc-300 mb-2 md:mb-4" />
 
-              <div className="text-xs text-zinc-500 mb-4 font-bold">STUDIO APARTMENT MOVE • {HOURS_WORKED} HOURS</div>
+              <div className="text-[10px] md:text-xs text-zinc-500 mb-2 md:mb-4 font-bold">STUDIO APARTMENT MOVE • {HOURS_WORKED} HOURS</div>
 
               {/* Line Items */}
-              <div className="space-y-3 min-h-[180px]">
+              <div className="space-y-2 md:space-y-3 min-h-[120px] md:min-h-[180px]">
                 {receiptItems.map((item, index) => (
                   <div
                     key={item.label}
                     ref={(el) => { itemRefs.current[index] = el; }}
-                    className="flex justify-between text-sm"
+                    className="flex justify-between text-xs md:text-sm"
                   >
                     <span className={item.isDiscount ? "text-yellow-600 font-bold" : ""}>
                       {item.label}
                       {item.isHourly && (
-                        <span className="text-zinc-400 text-xs ml-1">
+                        <span className="text-zinc-400 text-[10px] md:text-xs ml-1">
                           (${item.rate}/hr × {item.hours}hrs)
                         </span>
                       )}
@@ -154,27 +154,27 @@ export default function ReceiptTape() {
               </div>
 
               {/* Dotted line */}
-              <div className="border-b-2 border-dashed border-zinc-300 my-4" />
+              <div className="border-b-2 border-dashed border-zinc-300 my-2 md:my-4" />
 
               {/* Total */}
               <div ref={totalRef} className="flex justify-between items-center">
-                <span className="text-lg font-black">TOTAL</span>
-                <span className="text-3xl font-black text-yellow-500">${total}</span>
+                <span className="text-base md:text-lg font-black">TOTAL</span>
+                <span className="text-2xl md:text-3xl font-black text-yellow-500">${total}</span>
               </div>
 
               {/* Dotted line */}
-              <div className="border-b-2 border-dashed border-zinc-300 my-4" />
+              <div className="border-b-2 border-dashed border-zinc-300 my-2 md:my-4" />
 
               {/* Footer */}
-              <div ref={footerRef} className="text-center text-xs text-zinc-500">
-                <div className="mb-2 font-bold">No hidden fees. Ever.</div>
+              <div ref={footerRef} className="text-center text-[10px] md:text-xs text-zinc-500">
+                <div className="mb-1 md:mb-2 font-bold">No hidden fees. Ever.</div>
                 <div className="text-zinc-400">M-F 5PM-1AM • Weekends 6AM-1AM</div>
               </div>
             </div>
 
             {/* Receipt tear edge */}
             <div
-              className="h-4 bg-zinc-100"
+              className="h-3 md:h-4 bg-zinc-100"
               style={{
                 maskImage:
                   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0 10 L5 0 L10 10 L15 0 L20 10 L25 0 L30 10 L35 0 L40 10 L45 0 L50 10 L55 0 L60 10 L65 0 L70 10 L75 0 L80 10 L85 0 L90 10 L95 0 L100 10' fill='white'/%3E%3C/svg%3E\")",
