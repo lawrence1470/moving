@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CardFan from "./components/CardFan";
@@ -101,19 +102,55 @@ export default function Home() {
         {/* Floating Doodles */}
         <HeroDoodles />
 
-        {/* Header */}
-        <header className="absolute top-0 left-0 w-full z-20 px-6 py-4 border-b border-white/10">
+        {/* Header - Sticky Note Stack */}
+        <header className="absolute top-0 left-0 w-full z-20 px-6 py-5">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
+            {/* Logo */}
             <Image src="/logo.svg" alt="Walk-up Pros" width={192} height={56} className="h-10 w-auto" />
-            <div className="hidden md:flex items-center gap-2 text-zinc-400 text-sm">
-              <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
-              <span>Evening hours • 6PM–1AM</span>
-            </div>
+
+            {/* Sticky Note Nav Links */}
+            <nav className="hidden md:flex items-center gap-1">
+              {[
+                { label: "About", href: "/about", rotate: "-2deg" },
+                { label: "Pricing", href: "#pricing", rotate: "1.5deg" },
+                { label: "FAQ", href: "#faq", rotate: "-1deg" },
+              ].map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="group relative px-4 py-2 text-sm font-bold text-zinc-900 bg-yellow-400 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+                  style={{
+                    transform: `rotate(${item.rotate})`,
+                    boxShadow: "2px 2px 4px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  <span className="relative z-10">{item.label}</span>
+                  {/* Paper texture overlay */}
+                  <div className="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')]" />
+                </Link>
+              ))}
+            </nav>
+
+            {/* CTA Button with Tape Effect */}
             <button
               onClick={() => setIsModalOpen(true)}
-              className="cursor-pointer text-sm border border-white/20 px-5 py-2.5 hover:bg-white/10 transition-colors"
+              className="cursor-pointer relative group hidden md:block"
             >
-              Text Us
+              {/* Tape strip */}
+              <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-3 bg-yellow-400/80" style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.2)" }} />
+              {/* Main button */}
+              <div className="relative bg-zinc-900 text-yellow-400 px-5 py-2.5 text-sm font-black uppercase tracking-wide border-2 border-zinc-900 transition-all duration-200 group-hover:-translate-y-0.5 group-hover:shadow-lg"
+                style={{ boxShadow: "3px 3px 0px 0px #000" }}
+              >
+                Text Us
+              </div>
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button className="md:hidden cursor-pointer p-2" onClick={() => setIsModalOpen(true)}>
+              <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
           </div>
         </header>
@@ -272,127 +309,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <FadeIn>
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-zinc-500 font-mono text-sm">[02]</span>
-              <span className="text-zinc-500 text-sm">Services</span>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.1}>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 max-w-3xl">
-              Everything you need.<br />
-              <span className="text-zinc-500">Nothing you don&apos;t.</span>
-            </h2>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <p className="text-zinc-400 text-lg mb-16 max-w-2xl">
-              Comprehensive moving services designed for Manhattan apartments. We handle the heavy lifting so you can focus on settling in.
-            </p>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-2 lg:grid-cols-3 gap-4" stagger={0.08}>
-            {[
-              { title: "Apartment Moving", desc: "Studios to penthouses, walk-ups to high-rises" },
-              { title: "Packing Services", desc: "Professional packing with quality materials" },
-              { title: "Evening Availability", desc: "6PM to 1AM — move after work" },
-              { title: "Furniture Assembly", desc: "Disassembly and reassembly included" },
-              { title: "Fully Insured", desc: "Your belongings are 100% protected" },
-              { title: "Same-Week Booking", desc: "Last minute? We've got you covered" },
-            ].map((service, index) => (
-              <div
-                key={index}
-                className="group bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-6 hover:bg-zinc-900 hover:border-zinc-700 transition-all"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-semibold mb-1 group-hover:text-yellow-400 transition-colors">{service.title}</h3>
-                    <p className="text-zinc-500 text-sm">{service.desc}</p>
-                  </div>
-                  <svg className="w-5 h-5 text-zinc-600 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* About/Image Section */}
-      <section className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <FadeIn direction="left" distance={60}>
-              <div className="relative">
-                <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-zinc-900 relative">
-                  <ParallaxImage
-                    src="https://images.unsplash.com/photo-1600518464441-9154a4dea21b?w=800&q=80"
-                    alt="Moving boxes ready for transport"
-                    containerClassName="absolute inset-0"
-                    speed={0.4}
-                    scale={1.15}
-                  />
-                </div>
-                <FadeIn delay={0.3} direction="up">
-                  <div className="absolute -bottom-6 -right-6 bg-yellow-400 text-zinc-900 p-6 rounded-xl">
-                    <div className="text-2xl font-bold">Built on trust</div>
-                    <div className="text-sm font-medium">Not contracts</div>
-                  </div>
-                </FadeIn>
-              </div>
-            </FadeIn>
-
-            <div>
-              <FadeIn direction="right">
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="text-zinc-500 font-mono text-sm">[03]</span>
-                  <span className="text-zinc-500 text-sm">About us</span>
-                </div>
-              </FadeIn>
-
-              <FadeIn direction="right" delay={0.1}>
-                <h2 className="text-3xl sm:text-4xl font-bold mb-6">
-                  More than movers.<br />
-                  <span className="text-zinc-500">We&apos;re your friends.</span>
-                </h2>
-              </FadeIn>
-
-              <FadeIn direction="right" delay={0.2}>
-                <p className="text-zinc-400 leading-relaxed mb-6">
-                  We&apos;re a small company of close friends who started Walk-up Pros after years of helping each other move apartments around the city. We saw how broken the moving industry is—big companies upcharge on everything and hire people who don&apos;t really care about you. They&apos;re just there for a paycheck.
-                </p>
-              </FadeIn>
-
-              <FadeIn direction="right" delay={0.3}>
-                <p className="text-zinc-400 leading-relaxed mb-8">
-                  That&apos;s not us. We know how stressful moving can be, so we bring professionalism and genuine kindness to every job. We&apos;re not just your movers—we&apos;re your friends through the process. NYC is our home, and we want to help you make it yours too.
-                </p>
-              </FadeIn>
-
-              <StaggerContainer className="flex gap-8" stagger={0.1} direction="right">
-                <div>
-                  <div className="text-2xl font-bold text-yellow-400">100%</div>
-                  <div className="text-sm text-zinc-500">Happy clients</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-yellow-400">&lt;5min</div>
-                  <div className="text-sm text-zinc-500">Response time</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-yellow-400">24/7</div>
-                  <div className="text-sm text-zinc-500">Text support</div>
-                </div>
-              </StaggerContainer>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
@@ -428,9 +344,9 @@ export default function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-zinc-900" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm13.5-9l1.96 2.5H17V9.5h2.5zm-1.5 9c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+              <div className="w-12 h-12 bg-yellow-400 rounded-lg flex items-center justify-center border-[3px] border-zinc-900">
+                <svg className="w-7 h-7" viewBox="0 0 32 32" fill="none" stroke="#231F20" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8 24 L8 18 L13 18 L13 12 L18 12 L18 6 L24 6 L24 24"/>
                 </svg>
               </div>
               <span className="text-lg font-semibold">Walk-up Pros</span>

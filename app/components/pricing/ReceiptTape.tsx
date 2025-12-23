@@ -8,10 +8,13 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+const HOURS_WORKED = 2;
+const HOURLY_RATE = 99;
+
 const receiptItems = [
-  { label: "2 Professional Movers", price: 99 },
-  { label: "Moving Truck", price: 40 },
-  { label: "Equipment & Padding", price: 10 },
+  { label: "2 Professional Movers", rate: HOURLY_RATE, hours: HOURS_WORKED, isHourly: true },
+  { label: "Moving Truck", price: 40, isFlat: true },
+  { label: "Equipment & Padding", price: 10, isFlat: true },
   { label: "Evening Discount", price: 0, isDiscount: true },
 ];
 
@@ -24,7 +27,11 @@ export default function ReceiptTape() {
   const footerRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
 
-  const total = receiptItems.reduce((sum, item) => sum + (item.isDiscount ? 0 : item.price), 0);
+  const total = receiptItems.reduce((sum, item) => {
+    if (item.isDiscount) return sum;
+    if (item.isHourly) return sum + (item.rate! * item.hours!);
+    return sum + (item.price || 0);
+  }, 0);
 
   useEffect(() => {
     setIsClient(true);
@@ -115,10 +122,10 @@ export default function ReceiptTape() {
               {/* Dotted line */}
               <div className="border-b-2 border-dashed border-zinc-300 mb-4" />
 
-              <div className="text-xs text-zinc-500 mb-4 font-bold">STUDIO APARTMENT MOVE</div>
+              <div className="text-xs text-zinc-500 mb-4 font-bold">STUDIO APARTMENT MOVE • {HOURS_WORKED} HOURS</div>
 
               {/* Line Items */}
-              <div className="space-y-3 min-h-[160px]">
+              <div className="space-y-3 min-h-[180px]">
                 {receiptItems.map((item, index) => (
                   <div
                     key={item.label}
@@ -127,9 +134,14 @@ export default function ReceiptTape() {
                   >
                     <span className={item.isDiscount ? "text-yellow-600 font-bold" : ""}>
                       {item.label}
+                      {item.isHourly && (
+                        <span className="text-zinc-400 text-xs ml-1">
+                          (${item.rate}/hr × {item.hours}hrs)
+                        </span>
+                      )}
                     </span>
                     <span className={item.isDiscount ? "text-yellow-600 font-bold" : "font-bold"}>
-                      {item.isDiscount ? "FREE" : `$${item.price}/hr`}
+                      {item.isDiscount ? "FREE" : item.isHourly ? `$${item.rate! * item.hours!}` : `$${item.price}`}
                     </span>
                   </div>
                 ))}
@@ -141,7 +153,7 @@ export default function ReceiptTape() {
               {/* Total */}
               <div ref={totalRef} className="flex justify-between items-center">
                 <span className="text-lg font-black">TOTAL</span>
-                <span className="text-3xl font-black text-yellow-500">${total}/hr</span>
+                <span className="text-3xl font-black text-yellow-500">${total}</span>
               </div>
 
               {/* Dotted line */}

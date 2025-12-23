@@ -124,12 +124,13 @@ export function SectionDoodles({ variant = "default" }: { variant?: "default" | 
 
   return (
     <>
-      {/* Trophy - best service */}
+      {/* Moving truck - main doodle */}
       <Doodle
-        src="/doodles/doodle-122.svg"
-        className="absolute top-10 right-10 opacity-40 hidden lg:block"
-        size={45}
-        rotate={20}
+        src="/doodles/moving-truck.svg"
+        className="absolute top-4 right-4 lg:top-8 lg:right-12 opacity-90"
+        size={180}
+        rotate={-25}
+        float={false}
       />
     </>
   );

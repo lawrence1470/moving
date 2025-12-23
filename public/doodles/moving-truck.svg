@@ -1,0 +1,39 @@
+<svg viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hand-drawn style moving truck - larger version -->
+
+  <!-- Truck body/cargo area -->
+  <rect x="8" y="24" width="52" height="44" rx="3" fill="#FDE047" stroke="#231F20" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Cargo door lines -->
+  <line x1="34" y1="30" x2="34" y2="62" stroke="#231F20" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="16" y1="46" x2="26" y2="46" stroke="#231F20" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="42" y1="46" x2="52" y2="46" stroke="#231F20" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Cab -->
+  <path d="M60 40 L60 68 L92 68 L92 52 L78 40 L60 40" fill="#FDE047" stroke="#231F20" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Windshield -->
+  <path d="M66 46 L66 56 L84 56 L74 46 L66 46" fill="#fff" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Wheels -->
+  <circle cx="28" cy="74" r="12" fill="#231F20" stroke="#231F20" stroke-width="2"/>
+  <circle cx="28" cy="74" r="5" fill="#FDE047"/>
+
+  <circle cx="78" cy="74" r="12" fill="#231F20" stroke="#231F20" stroke-width="2"/>
+  <circle cx="78" cy="74" r="5" fill="#FDE047"/>
+
+  <!-- Bumper -->
+  <rect x="90" y="60" width="8" height="8" rx="2" fill="#231F20"/>
+
+  <!-- Motion lines -->
+  <line x1="2" y1="38" x2="6" y2="38" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+  <line x1="0" y1="50" x2="5" y2="50" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+  <line x1="2" y1="62" x2="6" y2="62" stroke="#231F20" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Small box on top (shows it's a moving truck) -->
+  <rect x="16" y="10" width="16" height="14" rx="2" fill="#fff" stroke="#231F20" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="20" y1="17" x2="28" y2="17" stroke="#231F20" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Second box -->
+  <rect x="36" y="12" width="12" height="12" rx="2" fill="#fff" stroke="#231F20" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

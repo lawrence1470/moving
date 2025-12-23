@@ -13,58 +13,34 @@ const testimonials = [
     id: 1,
     quote: "Moved my entire studio in under 2 hours. Super fast and careful!",
     name: "Sarah M.",
-    role: "Studio Apt",
-    color: "#FDE047", // yellow-300 (brightest)
-    dark: true,
+    location: "Studio Apt",
   },
   {
     id: 2,
-    quote: "The evening hours are perfect. Didn't have to take time off work.",
+    quote: "Evening hours are perfect. Didn't have to take time off work.",
     name: "James K.",
-    role: "Chelsea",
-    color: "#FACC15", // yellow-400
-    dark: true,
+    location: "Chelsea",
   },
   {
     id: 3,
-    quote: "Best movers in Manhattan. Handled my antiques with such care.",
+    quote: "Best movers in Manhattan. Handled my antiques with care.",
     name: "Lisa T.",
-    role: "Upper West",
-    color: "#EAB308", // yellow-500
-    dark: true,
+    location: "Upper West",
   },
   {
     id: 4,
-    quote: "Finally, movers who actually show up on time. Highly recommend!",
+    quote: "Finally, movers who actually show up on time!",
     name: "Emma L.",
-    role: "SoHo",
-    color: "#CA8A04", // yellow-600
-    dark: true,
-  },
-  {
-    id: 5,
-    quote: "Saved me so much stress. These guys know what they're doing.",
-    name: "Mike R.",
-    role: "Tribeca",
-    color: "#A16207", // yellow-700
-  },
-  {
-    id: 6,
-    quote: "Third time using them. Loyal customer for life now.",
-    name: "Diana P.",
-    role: "Brooklyn",
-    color: "#854D0E", // yellow-800 (deepest)
+    location: "SoHo",
   },
 ];
 
-// Random scattered positions for magnetic pull effect
+// Scattered positions for magnetic pull effect
 const scatteredPositions = [
-  { x: -400, y: -200, rotation: -60, scale: 0.45 },
-  { x: 420, y: -150, rotation: 50, scale: 0.5 },
-  { x: -320, y: 180, rotation: -40, scale: 0.55 },
-  { x: 350, y: 200, rotation: 55, scale: 0.5 },
-  { x: -450, y: 50, rotation: -70, scale: 0.45 },
-  { x: 480, y: 80, rotation: 65, scale: 0.5 },
+  { x: -350, y: -180, rotation: -45, scale: 0.5 },
+  { x: 380, y: -120, rotation: 40, scale: 0.55 },
+  { x: -300, y: 150, rotation: -35, scale: 0.5 },
+  { x: 320, y: 180, rotation: 50, scale: 0.55 },
 ];
 
 export default function TestimonialCards() {
@@ -83,7 +59,7 @@ export default function TestimonialCards() {
     const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
     const ctx = gsap.context(() => {
-      // Set initial scattered state - fully hidden until animation starts
+      // Set initial scattered state
       cards.forEach((card, index) => {
         const scattered = scatteredPositions[index];
         gsap.set(card, {
@@ -95,7 +71,7 @@ export default function TestimonialCards() {
         });
       });
 
-      // Create magnetic pull timeline - pinned with scrub
+      // Create magnetic pull timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -109,9 +85,9 @@ export default function TestimonialCards() {
         },
       });
 
-      // Animate each card to its fan position (wider spread)
+      // Animate each card to its position
       cards.forEach((card, index) => {
-        const baseRotation = (index - (cards.length - 1) / 2) * 18;
+        const baseRotation = (index - (cards.length - 1) / 2) * 12; // More spread
 
         tl.to(card, {
           x: 0,
@@ -121,14 +97,14 @@ export default function TestimonialCards() {
           opacity: 1,
           duration: 1,
           ease: "power3.out",
-        }, index * 0.08);
+        }, index * 0.1);
       });
     }, section);
 
     return () => ctx.revert();
   }, []);
 
-  // Mouse interaction effects (only active after animation completes)
+  // Mouse interaction effects
   useEffect(() => {
     const container = containerRef.current;
     const cardsContainer = cardsRef.current;
@@ -147,16 +123,16 @@ export default function TestimonialCards() {
       const offsetY = (mouseY - centerY) / centerY;
 
       cards.forEach((card, index) => {
-        const baseRotation = (index - (cards.length - 1) / 2) * 18;
+        const baseRotation = (index - (cards.length - 1) / 2) * 12;
         const cardCenterIndex = index - (cards.length - 1) / 2;
 
-        const xInfluence = offsetX * 15 * (1 - Math.abs(cardCenterIndex) * 0.15);
-        const yInfluence = offsetY * 8;
-        const rotationInfluence = offsetX * 5 * cardCenterIndex * -0.5;
+        const xInfluence = offsetX * 12 * (1 - Math.abs(cardCenterIndex) * 0.15);
+        const yInfluence = offsetY * 6;
+        const rotationInfluence = offsetX * 3 * cardCenterIndex * -0.5;
 
         gsap.to(card, {
-          x: xInfluence * (index + 1) * 0.5,
-          y: yInfluence * 5,
+          x: xInfluence * (index + 1) * 0.4,
+          y: yInfluence * 4,
           rotation: baseRotation + rotationInfluence,
           duration: 0.5,
           ease: "power2.out",
@@ -166,7 +142,7 @@ export default function TestimonialCards() {
 
     const handleMouseLeave = () => {
       cards.forEach((card, index) => {
-        const baseRotation = (index - (cards.length - 1) / 2) * 18;
+        const baseRotation = (index - (cards.length - 1) / 2) * 12;
         gsap.to(card, {
           x: 0,
           y: 0,
@@ -192,8 +168,8 @@ export default function TestimonialCards() {
     const card = cardsRef.current?.querySelectorAll(".testimonial-card")[index];
     if (card) {
       gsap.to(card, {
-        y: -30,
-        scale: 1.1,
+        y: -20,
+        scale: 1.08,
         rotation: 0,
         zIndex: 50,
         duration: 0.3,
@@ -206,7 +182,7 @@ export default function TestimonialCards() {
     if (!animationComplete) return;
     const card = cardsRef.current?.querySelectorAll(".testimonial-card")[index];
     if (card) {
-      const baseRotation = (index - (testimonials.length - 1) / 2) * 18;
+      const baseRotation = (index - (testimonials.length - 1) / 2) * 12;
       gsap.to(card, {
         y: 0,
         scale: 1,
@@ -221,107 +197,94 @@ export default function TestimonialCards() {
   return (
     <section ref={sectionRef} className="relative z-20 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center" style={{ isolation: 'isolate' }}>
       <div ref={containerRef} className="max-w-7xl mx-auto px-4 md:px-6 w-full flex flex-col justify-center">
-      {/* Header */}
-      <div className="mb-8">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-          They say it better
-          <br />
-          <span className="text-zinc-500">than we do</span>
-        </h2>
-      </div>
+        {/* Header */}
+        <div className="mb-8">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+            They say it better
+            <br />
+            <span className="text-zinc-500">than we do</span>
+          </h2>
+        </div>
 
-      {/* Cards Container */}
-      <div
-        ref={cardsRef}
-        className="relative flex justify-center items-center h-[320px]"
-      >
-        {testimonials.map((testimonial, index) => {
-          // Center the cards: calculate offset from center
-          const totalCards = testimonials.length;
-          const cardOffset = (index - (totalCards - 1) / 2) * 70; // 70px spacing from center
+        {/* Cards Container */}
+        <div
+          ref={cardsRef}
+          className="relative flex justify-center items-center h-[350px]"
+        >
+          {testimonials.map((testimonial, index) => {
+            const totalCards = testimonials.length;
+            const cardOffset = (index - (totalCards - 1) / 2) * 160;
 
-          return (
-            <div
-              key={testimonial.id}
-              className="testimonial-card absolute cursor-pointer left-1/2"
-              style={{
-                marginLeft: `${cardOffset}px`,
-                transform: 'translateX(-50%)',
-                zIndex: index + 1,
-              }}
-            onMouseEnter={() => handleCardHover(index)}
-            onMouseLeave={() => handleCardLeave(index)}
-          >
-            <div
-              className="relative w-[160px] sm:w-[180px] h-[220px] sm:h-[240px] p-4 border-4 border-black transition-shadow"
-              style={{
-                backgroundColor: testimonial.color,
-                boxShadow: '6px 6px 0px 0px #000'
-              }}
-            >
-              {/* Card Number - Monospace accent */}
+            return (
               <div
-                className="font-mono text-xs mb-3"
+                key={testimonial.id}
+                className="testimonial-card absolute cursor-pointer left-1/2"
                 style={{
-                  color: testimonial.dark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.6)",
+                  marginLeft: `${cardOffset}px`,
+                  transform: 'translateX(-50%)',
+                  zIndex: index + 1,
                 }}
+                onMouseEnter={() => handleCardHover(index)}
+                onMouseLeave={() => handleCardLeave(index)}
               >
-                [{String(index + 1).padStart(2, '0')}]
-              </div>
-
-              {/* Quote */}
-              <p
-                className="text-sm font-bold leading-snug tracking-tight"
-                style={{
-                  color: testimonial.dark ? "rgba(0,0,0,0.9)" : "rgba(255,255,255,0.95)",
-                }}
-              >
-                "{testimonial.quote}"
-              </p>
-
-              {/* Author */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-                <div
-                  className="w-8 h-8 flex items-center justify-center text-xs font-black border-2"
-                  style={{
-                    backgroundColor: testimonial.dark ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.25)",
-                    color: testimonial.dark ? "rgba(0,0,0,0.8)" : "rgba(255,255,255,0.95)",
-                    borderColor: testimonial.dark ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.4)",
-                  }}
-                >
-                  {testimonial.name.charAt(0)}
-                </div>
-                <div>
+                {/* Speech Bubble Card */}
+                <div className="relative">
+                  {/* Main bubble */}
                   <div
-                    className="text-xs font-black tracking-wide uppercase"
-                    style={{
-                      color: testimonial.dark ? "rgba(0,0,0,0.9)" : "rgba(255,255,255,0.95)",
-                    }}
+                    className="relative w-[200px] sm:w-[220px] bg-yellow-400 p-5 border-4 border-black rounded-2xl"
+                    style={{ boxShadow: '5px 5px 0px 0px #000' }}
                   >
-                    {testimonial.name}
+                    {/* Quote */}
+                    <p className="text-black text-sm sm:text-base font-bold leading-snug mb-4">
+                      "{testimonial.quote}"
+                    </p>
+
+                    {/* Author */}
+                    <div className="flex items-center gap-3">
+                      {/* Avatar circle */}
+                      <div className="w-10 h-10 bg-black text-yellow-400 rounded-full flex items-center justify-center text-sm font-black border-2 border-black">
+                        {testimonial.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="text-black text-sm font-black">
+                          {testimonial.name}
+                        </div>
+                        <div className="text-black/60 text-xs font-medium">
+                          {testimonial.location}
+                        </div>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Speech bubble tail */}
                   <div
-                    className="text-[10px] font-mono"
+                    className="absolute -bottom-3 left-8 w-0 h-0"
                     style={{
-                      color: testimonial.dark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.7)",
+                      borderLeft: '12px solid transparent',
+                      borderRight: '12px solid transparent',
+                      borderTop: '16px solid #000',
                     }}
-                  >
-                    {testimonial.role}
-                  </div>
+                  />
+                  <div
+                    className="absolute -bottom-[6px] left-[34px] w-0 h-0"
+                    style={{
+                      borderLeft: '10px solid transparent',
+                      borderRight: '10px solid transparent',
+                      borderTop: '14px solid #FACC15',
+                    }}
+                  />
                 </div>
               </div>
-            </div>
-          </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
 
-      {/* Subtitle */}
-      <div className="text-center mt-12">
-        <p className="text-zinc-400 text-lg">
-          Our customers always love us — <span className="text-yellow-400 font-semibold">100% satisfaction</span>
-        </p>
-      </div>
+        {/* Subtitle */}
+        <div className="text-center mt-16">
+          <p className="text-zinc-400 text-lg">
+            Our customers always love us — <span className="text-yellow-400 font-semibold">100% satisfaction</span>
+          </p>
+        </div>
       </div>
     </section>
   );
