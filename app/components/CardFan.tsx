@@ -49,6 +49,7 @@ export default function CardFan() {
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   // Scroll-triggered horizontal train animation
   useEffect(() => {
@@ -78,8 +79,15 @@ export default function CardFan() {
             end: "+=100%",
             pin: true,
             pinSpacing: true,
-            scrub: 0.5,
+            scrub: 0.8,
             anticipatePin: 1,
+            refreshPriority: 1, // First pinned section - refresh first
+            snap: {
+              snapTo: 1,
+              duration: { min: 0.2, max: 0.5 },
+              delay: 0.1,
+              ease: "power2.inOut",
+            },
           },
         });
 
@@ -88,6 +96,20 @@ export default function CardFan() {
           x: -moveDistance,
           ease: "none",
         });
+
+        // Exit animation - fade header as section ends
+        if (headerRef.current) {
+          gsap.to(headerRef.current, {
+            opacity: 0.3,
+            y: -20,
+            scrollTrigger: {
+              trigger: section,
+              start: "80% top",
+              end: "100% top",
+              scrub: true,
+            },
+          });
+        }
       }, section);
     };
 
@@ -146,7 +168,7 @@ export default function CardFan() {
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible w-full">
         {/* Section Header */}
-        <div className="mb-6 md:mb-8">
+        <div ref={headerRef} className="mb-6 md:mb-8">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-12 h-1 bg-yellow-400" />
             <span className="font-mono text-sm text-zinc-500">[WHY US]</span>

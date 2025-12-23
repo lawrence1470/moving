@@ -13,6 +13,7 @@ import {
   ParallaxImage,
   StaggerContainer,
   HeroText,
+  SectionBridge,
 } from "./components/animations";
 import { HeroDoodles, Mascot, SectionDoodles } from "./components/Doodles";
 import ReceiptTape from "./components/pricing/ReceiptTape";
@@ -151,6 +152,14 @@ export default function Home() {
             </FadeIn>
           </div>
         </div>
+
+        {/* Visual bridge to next section */}
+        <SectionBridge
+          fromColor="transparent"
+          toColor="rgba(0,0,0,0.9)"
+          height="150px"
+          position="bottom"
+        />
       </section>
 
       {/* Cards Section */}

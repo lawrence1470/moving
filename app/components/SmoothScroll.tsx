@@ -15,12 +15,14 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Initialize Lenis
+    // Initialize Lenis with optimized settings for section transitions
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      touchMultiplier: 2,
+      duration: 1.4, // Slightly longer for smoother deceleration
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease out
+      touchMultiplier: 1.5, // Reduced for more control on mobile
       infinite: false,
+      smoothWheel: true,
+      syncTouch: true, // Better touch synchronization
     });
 
     lenisRef.current = lenis;

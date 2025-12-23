@@ -45,6 +45,7 @@ export default function TestimonialCards() {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
 
   // Magnetic pull scroll animation
@@ -79,6 +80,13 @@ export default function TestimonialCards() {
           pinSpacing: true,
           scrub: 0.8,
           anticipatePin: 1,
+          refreshPriority: 0, // Second pinned section - default priority
+          snap: {
+            snapTo: 1,
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.1,
+            ease: "power2.inOut",
+          },
           onLeave: () => setAnimationComplete(true),
           onEnterBack: () => setAnimationComplete(false),
         },
@@ -98,6 +106,20 @@ export default function TestimonialCards() {
           ease: "power3.out",
         }, index * 0.1);
       });
+
+      // Exit animation - fade header as section ends
+      if (headerRef.current) {
+        gsap.to(headerRef.current, {
+          opacity: 0.3,
+          y: -20,
+          scrollTrigger: {
+            trigger: section,
+            start: "80% top",
+            end: "100% top",
+            scrub: true,
+          },
+        });
+      }
     }, section);
 
     return () => ctx.revert();
@@ -197,7 +219,7 @@ export default function TestimonialCards() {
     <section ref={sectionRef} className="relative z-20 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center" style={{ isolation: 'isolate' }}>
       <div ref={containerRef} className="max-w-7xl mx-auto px-4 md:px-6 w-full flex flex-col justify-center">
         {/* Header */}
-        <div className="mb-8">
+        <div ref={headerRef} className="mb-8">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
             They say it better
             <br />

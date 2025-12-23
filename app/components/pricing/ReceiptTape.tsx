@@ -61,8 +61,15 @@ export default function ReceiptTape() {
           end: "+=100%",
           pin: true,
           pinSpacing: true,
-          scrub: 0.5,
+          scrub: 0.8,
           anticipatePin: 1,
+          refreshPriority: -1, // Third pinned section - refresh last
+          snap: {
+            snapTo: 1,
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.1,
+            ease: "power2.inOut",
+          },
         },
       });
 
