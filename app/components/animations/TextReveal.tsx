@@ -4,9 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// ScrollTrigger registered in SmoothScroll.tsx
 
 interface TextRevealProps {
   text: string;
@@ -63,6 +61,11 @@ export default function TextReveal({
 
     return () => {
       animation.kill();
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.trigger === container) {
+          trigger.kill();
+        }
+      });
     };
   }, [delay, stagger, useScrollTrigger]);
 

@@ -4,9 +4,7 @@ import { useEffect, useRef, ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// ScrollTrigger registered in SmoothScroll.tsx
 
 interface ScrollRevealProps {
   children: ReactNode;

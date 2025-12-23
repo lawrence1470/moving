@@ -33,9 +33,7 @@ function InlinePizza({ size = "1em" }: { size?: string }) {
   );
 }
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// ScrollTrigger registered in SmoothScroll.tsx
 
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -63,13 +61,7 @@ export default function Home() {
     };
   }, []);
 
-  // Refresh ScrollTrigger after all components mount
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 200);
-    return () => clearTimeout(timer);
-  }, []);
+  // ScrollTrigger.refresh() handled by SmoothScroll.tsx
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">

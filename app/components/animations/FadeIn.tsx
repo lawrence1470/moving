@@ -4,9 +4,7 @@ import { useEffect, useRef, ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// ScrollTrigger registered in SmoothScroll.tsx
 
 interface FadeInProps {
   children: ReactNode;
@@ -75,6 +73,11 @@ export default function FadeIn({
 
     return () => {
       animation.kill();
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.trigger === element) {
+          trigger.kill();
+        }
+      });
     };
   }, [delay, duration, direction, distance, useScrollTrigger, threshold]);
 

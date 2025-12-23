@@ -4,9 +4,7 @@ import { useEffect, useRef, ReactNode, Children } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// ScrollTrigger registered in SmoothScroll.tsx
 
 interface StaggerContainerProps {
   children: ReactNode;
@@ -80,6 +78,11 @@ export default function StaggerContainer({
 
     return () => {
       animation.kill();
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.trigger === container) {
+          trigger.kill();
+        }
+      });
     };
   }, [stagger, delay, duration, direction, distance, useScrollTrigger, threshold]);
 
