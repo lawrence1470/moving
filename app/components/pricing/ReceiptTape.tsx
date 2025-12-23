@@ -46,6 +46,8 @@ export default function ReceiptTape() {
     if (!section || !receipt || !header || !totalEl || !footer) return;
 
     const ctx = gsap.context(() => {
+      const isMobile = window.innerWidth < 768;
+
       // Set initial states
       gsap.set(header, { opacity: 0, y: -30 });
       gsap.set(receipt, { opacity: 0, y: 50, scale: 0.9 });
@@ -58,10 +60,10 @@ export default function ReceiptTape() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=100%",
+          end: isMobile ? "+=60%" : "+=100%", // Shorter scroll distance on mobile
           pin: true,
           pinSpacing: true,
-          scrub: 0.8,
+          scrub: isMobile ? 0.4 : 0.8, // Faster scrub on mobile
           anticipatePin: 1,
           refreshPriority: -1, // Third pinned section - refresh last
           snap: {

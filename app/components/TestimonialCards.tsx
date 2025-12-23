@@ -81,10 +81,10 @@ export default function TestimonialCards() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=100%",
+          end: isMobile ? "+=60%" : "+=100%", // Shorter scroll distance on mobile
           pin: true,
           pinSpacing: true,
-          scrub: 0.8,
+          scrub: isMobile ? 0.4 : 0.8, // Faster scrub on mobile
           anticipatePin: 1,
           refreshPriority: 0, // Second pinned section - default priority
           snap: {

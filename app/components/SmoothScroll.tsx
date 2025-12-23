@@ -22,7 +22,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const lenis = new Lenis({
       duration: isMobile ? 1.0 : 1.4, // Faster on mobile for better responsiveness
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease out
-      touchMultiplier: isMobile ? 1.0 : 1.5, // Lower on mobile for pinned sections
+      touchMultiplier: isMobile ? 2.0 : 1.5, // Higher on mobile for easier scrolling through pinned sections
       infinite: false,
       smoothWheel: true,
       syncTouch: true, // Better touch synchronization

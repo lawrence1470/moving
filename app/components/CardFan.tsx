@@ -63,6 +63,7 @@ export default function CardFan() {
     const updateAnimation = () => {
       const trackWidth = track.scrollWidth;
       const viewportWidth = window.innerWidth;
+      const isMobile = viewportWidth < 768;
 
       // Get actual card width from first card element
       const firstCard = track.querySelector('.benefit-card') as HTMLElement;
@@ -84,10 +85,10 @@ export default function CardFan() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=150%", // Longer scroll distance for smoother animation
+            end: isMobile ? "+=80%" : "+=150%", // Shorter scroll distance on mobile
             pin: true,
             pinSpacing: true,
-            scrub: 0.5,
+            scrub: isMobile ? 0.3 : 0.5, // Faster scrub on mobile
             anticipatePin: 1,
             refreshPriority: 1,
           },
