@@ -89,7 +89,7 @@ export function Mascot() {
   return (
     <div
       ref={mascotRef}
-      className="fixed bottom-6 right-6 z-50 cursor-pointer hover:scale-110 transition-transform duration-300 hidden lg:block"
+      className="fixed bottom-6 right-6 z-50 cursor-pointer hover:scale-110 transition-transform duration-300"
       title="Hi! Need help moving?"
     >
       <div className="relative">

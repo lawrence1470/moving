@@ -85,6 +85,8 @@ export default function StepsZigzag() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const numberRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const iconRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dottedLineRef = useRef<SVGPathElement>(null);
+  const mobileDottedLineRef = useRef<SVGPathElement>(null);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
 
@@ -95,12 +97,32 @@ export default function StepsZigzag() {
     const cards = cardsRef.current.filter(Boolean);
     const numbers = numberRefs.current.filter(Boolean);
     const icons = iconRefs.current.filter(Boolean);
+    const dottedLine = dottedLineRef.current;
+    const mobileDottedLine = mobileDottedLineRef.current;
 
     if (!section || !header || cards.length === 0) return;
 
     const ctx = gsap.context(() => {
       // Set initial states
       gsap.set(header, { opacity: 0, y: 30 });
+
+      // Set up dotted line animation (desktop) - use clip path for draw effect
+      if (dottedLine) {
+        gsap.set(dottedLine, {
+          opacity: 0,
+          scaleX: 0,
+          transformOrigin: "left center",
+        });
+      }
+
+      // Set up dotted line animation (mobile) - vertical line
+      if (mobileDottedLine) {
+        gsap.set(mobileDottedLine, {
+          opacity: 0,
+          scaleY: 0,
+          transformOrigin: "top center",
+        });
+      }
 
       cards.forEach((card, index) => {
         if (!card) return;
@@ -150,6 +172,26 @@ export default function StepsZigzag() {
         duration: 0.3,
         ease: "power2.out",
       });
+
+      // Dotted line draws in (desktop) - scale from left to right
+      if (dottedLine) {
+        tl.to(dottedLine, {
+          opacity: 1,
+          scaleX: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        }, 0.25);
+      }
+
+      // Dotted line draws in (mobile) - scale from top to bottom
+      if (mobileDottedLine) {
+        tl.to(mobileDottedLine, {
+          opacity: 1,
+          scaleY: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        }, 0.25);
+      }
 
       // Cards appear with staggered timing
       cards.forEach((card, index) => {
@@ -351,7 +393,7 @@ export default function StepsZigzag() {
       className="relative z-40 min-h-screen bg-black border-t-4 border-yellow-400 flex items-center overflow-hidden"
       style={{ isolation: 'isolate' }}
     >
-      <div className="max-w-6xl mx-auto px-6 relative w-full">
+      <div className="max-w-6xl mx-auto px-6 relative w-full pt-16 md:pt-20">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-8 md:mb-12">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
@@ -363,6 +405,44 @@ export default function StepsZigzag() {
             No complicated booking systems. No waiting on hold. Just text us.
           </p>
         </div>
+
+        {/* Dotted Line SVG - Connecting the cards */}
+        <svg
+          className="absolute left-1/2 -translate-x-1/2 top-[55%] w-[80%] max-w-3xl h-16 pointer-events-none hidden md:block"
+          viewBox="0 0 800 50"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path
+            ref={dottedLineRef}
+            d="M 50 25 Q 200 10 400 25 Q 600 40 750 25"
+            stroke="#FACC15"
+            strokeWidth="4"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.7"
+            style={{ strokeDasharray: "12 8" }}
+          />
+        </svg>
+
+        {/* Mobile dotted line - vertical */}
+        <svg
+          className="absolute left-1/2 -translate-x-1/2 top-[38%] w-4 h-[45%] pointer-events-none md:hidden"
+          viewBox="0 0 10 200"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path
+            ref={mobileDottedLineRef}
+            d="M 5 0 L 5 200"
+            stroke="#FACC15"
+            strokeWidth="4"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.6"
+            style={{ strokeDasharray: "10 8" }}
+          />
+        </svg>
 
         {/* Steps Cards - Horizontal on desktop, vertical on mobile */}
         <div className="relative z-10 flex flex-col items-center md:flex-row md:justify-center md:items-start gap-4 md:gap-6">
