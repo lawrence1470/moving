@@ -81,6 +81,7 @@ export default function CardFan() {
             pin: true,
             pinSpacing: true,
             scrub: 0.5,
+            anticipatePin: 1,
           },
         });
 

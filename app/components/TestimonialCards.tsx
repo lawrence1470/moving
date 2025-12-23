@@ -75,10 +75,8 @@ export default function TestimonialCards() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
+          start: "top 80%",
+          end: "top 20%",
           scrub: 0.8,
           onLeave: () => setAnimationComplete(true),
           onEnterBack: () => setAnimationComplete(false),

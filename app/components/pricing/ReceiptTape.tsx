@@ -55,14 +55,12 @@ export default function ReceiptTape() {
       gsap.set(totalEl, { opacity: 0, scale: 0.8 });
       gsap.set(footer, { opacity: 0 });
 
-      // Create timeline - pinned with scrub
+      // Create timeline with scrub
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
-          start: "top top",
-          end: "+=100%",
-          pin: true,
-          pinSpacing: true,
+          start: "top 80%",
+          end: "top 20%",
           scrub: 0.5,
         },
       });
