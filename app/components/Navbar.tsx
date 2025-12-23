@@ -11,6 +11,7 @@ export default function Navbar() {
   const isHome = pathname === "/";
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const phoneNumber = "(347) 617-2607";
 
@@ -61,22 +62,104 @@ export default function Navbar() {
           {/* CTA Button with Response Time */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="cursor-pointer group hidden md:flex items-center gap-2 bg-yellow-400 hover:bg-yellow-300 px-5 py-2.5 transition-all duration-200"
+            className="cursor-pointer group hidden md:flex flex-col items-center bg-yellow-400 hover:bg-yellow-300 px-6 py-2 border-2 border-black transition-all duration-200"
             style={{ boxShadow: "3px 3px 0px 0px #000" }}
           >
-            <span className="text-black font-black text-sm uppercase tracking-wide">Text Us</span>
-            <span className="text-black/60 text-sm font-medium">·</span>
-            <span className="text-black/70 text-sm font-semibold">&lt;5min reply</span>
+            <span className="text-black font-black text-base uppercase tracking-wide">Hit Us Up</span>
+            <span className="text-black/60 text-xs font-medium">we text back fast</span>
           </button>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden cursor-pointer p-2" onClick={() => setIsModalOpen(true)}>
+          <button className="md:hidden cursor-pointer p-2" onClick={() => setIsMobileMenuOpen(true)}>
             <svg className="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 z-[100] md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ opacity: 0, x: "100%" }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute top-0 right-0 h-full w-72 bg-zinc-900 p-6"
+            >
+              {/* Close button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="absolute top-5 right-5 w-10 h-10 flex items-center justify-center text-yellow-400 hover:text-yellow-300 transition-colors cursor-pointer"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Nav Links */}
+              <nav className="mt-16 flex flex-col gap-2">
+                {navLinks.map((item, index) => (
+                  <motion.div
+                    key={item.label}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block px-4 py-3 text-lg font-bold text-zinc-900 bg-yellow-400 transition-all duration-200 hover:bg-yellow-300"
+                      style={{
+                        transform: `rotate(${item.rotate})`,
+                        boxShadow: "3px 3px 0px 0px #000",
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* CTA Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mt-8"
+              >
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsModalOpen(true);
+                  }}
+                  className="w-full cursor-pointer bg-yellow-400 hover:bg-yellow-300 px-5 py-4 border-2 border-black transition-all duration-200"
+                  style={{ boxShadow: "4px 4px 0px 0px #000" }}
+                >
+                  <span className="text-black font-black text-lg uppercase tracking-wide">Hit Us Up</span>
+                  <span className="block text-black/60 text-sm font-medium mt-1">we text back fast</span>
+                </button>
+              </motion.div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Phone Number Modal */}
       <AnimatePresence>

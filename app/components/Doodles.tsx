@@ -51,9 +51,22 @@ export function Doodle({ src, className = "", size = 60, rotate = 0, float = tru
   );
 }
 
-// Hero section doodles - NYC themed (currently disabled)
+// Hero section doodles - NYC themed
 export function HeroDoodles() {
-  return null;
+  return (
+    <div
+      id="desktop-truck"
+      className="absolute top-1/2 right-8 md:right-16 lg:right-24 xl:right-32 -translate-y-1/2 opacity-90 pointer-events-none hidden md:block"
+    >
+      <Doodle
+        src="/doodles/moving-truck.svg"
+        className="w-48 h-48 lg:w-64 lg:h-64 xl:w-80 xl:h-80"
+        size={320}
+        rotate={-15}
+        float={false}
+      />
+    </div>
+  );
 }
 
 // Mascot component - cute character that appears on the page
@@ -76,7 +89,7 @@ export function Mascot() {
   return (
     <div
       ref={mascotRef}
-      className="fixed bottom-6 right-6 z-40 cursor-pointer hover:scale-110 transition-transform duration-300 hidden lg:block"
+      className="fixed bottom-6 right-6 z-50 cursor-pointer hover:scale-110 transition-transform duration-300 hidden lg:block"
       title="Hi! Need help moving?"
     >
       <div className="relative">

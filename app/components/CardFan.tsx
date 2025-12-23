@@ -59,41 +59,39 @@ export default function CardFan() {
 
     let ctx: gsap.Context;
 
-    // Calculate how far to move the track (total width of all cards minus viewport)
+    // Calculate how far to move the track
     const updateAnimation = () => {
       const trackWidth = track.scrollWidth;
-      const containerWidth = track.parentElement?.clientWidth || window.innerWidth;
-      const moveDistance = trackWidth - containerWidth + 40;
+      const viewportWidth = window.innerWidth;
+
+      // Start: first card centered in viewport
+      // End: last card centered in viewport
+      const startX = (viewportWidth - 320) / 2; // Center first card
+      const endX = -(trackWidth - (viewportWidth + 320) / 2); // Center last card
 
       // Clean up previous context
       if (ctx) ctx.revert();
 
       ctx = gsap.context(() => {
-        // Train animation - cards slide in from right to left
-        gsap.set(track, { x: containerWidth });
+        // Start with first card centered
+        gsap.set(track, { x: startX });
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=100%",
+            end: "+=150%", // Longer scroll distance for smoother animation
             pin: true,
             pinSpacing: true,
-            scrub: 0.8,
+            scrub: 0.5,
             anticipatePin: 1,
-            refreshPriority: 1, // First pinned section - refresh first
-            snap: {
-              snapTo: 1,
-              duration: { min: 0.2, max: 0.5 },
-              delay: 0.1,
-              ease: "power2.inOut",
-            },
+            refreshPriority: 1,
           },
         });
 
-        // Slide the entire track from right to left
+        // Slide to show all cards, ending with last card visible
         tl.to(track, {
-          x: -moveDistance,
+          x: endX,
           ease: "none",
         });
 
@@ -163,24 +161,24 @@ export default function CardFan() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-10 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center"
+      className="relative z-10 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex flex-col justify-center"
       style={{ isolation: 'isolate' }}
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-6 overflow-visible w-full">
-        {/* Section Header */}
-        <div ref={headerRef} className="mb-6 md:mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-1 bg-yellow-400" />
-            <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
-          </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white">
-            THE WALK-UP
-            <br />
-            <span className="text-yellow-400">EXPERTS</span>
-          </h2>
+      {/* Section Header - Absolutely positioned at top */}
+      <div ref={headerRef} className="absolute top-20 md:top-24 left-4 md:left-6 z-20">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-1 bg-yellow-400" />
+          <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
         </div>
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white">
+          THE WALK-UP
+          <br />
+          <span className="text-yellow-400">EXPERTS</span>
+        </h2>
+      </div>
 
-        {/* Cards Track - horizontal train that slides through */}
+      {/* Cards Track - Vertically centered */}
+      <div className="w-full overflow-visible">
         <div ref={cardsRef} className="overflow-visible flex items-center">
           <div
             ref={trackRef}

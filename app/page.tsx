@@ -17,6 +17,7 @@ import {
 } from "./components/animations";
 import { HeroDoodles, Mascot, SectionDoodles } from "./components/Doodles";
 import ReceiptTape from "./components/pricing/ReceiptTape";
+import StepsZigzag from "./components/StepsZigzag";
 
 // Inline pizza component for hero text
 function InlinePizza({ size = "1em" }: { size?: string }) {
@@ -59,6 +60,52 @@ export default function Home() {
 
     return () => {
       tl.scrollTrigger?.kill();
+    };
+  }, []);
+
+  // Truck drive-off animation (both mobile and desktop)
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    const animations: gsap.core.Tween[] = [];
+
+    // Mobile truck animation
+    const mobileTruck = document.getElementById("mobile-truck");
+    if (mobileTruck && window.innerWidth < 768) {
+      const mobileAnim = gsap.to(mobileTruck, {
+        x: "120vw",
+        rotation: 5,
+        ease: "power1.in",
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "60% top",
+          scrub: 1,
+        },
+      });
+      animations.push(mobileAnim);
+    }
+
+    // Desktop truck animation
+    const desktopTruck = document.getElementById("desktop-truck");
+    if (desktopTruck && window.innerWidth >= 768) {
+      const desktopAnim = gsap.to(desktopTruck, {
+        x: "50vw",
+        rotation: 5,
+        ease: "power1.in",
+        scrollTrigger: {
+          trigger: hero,
+          start: "top top",
+          end: "60% top",
+          scrub: 1,
+        },
+      });
+      animations.push(desktopAnim);
+    }
+
+    return () => {
+      animations.forEach((anim) => anim.scrollTrigger?.kill());
     };
   }, []);
 
@@ -150,6 +197,24 @@ export default function Home() {
                 </a>
               </div>
             </FadeIn>
+
+            {/* Mobile truck icon - drives off on scroll */}
+            <FadeIn delay={0.7}>
+              <div className="mt-8 md:hidden flex justify-center">
+                <div
+                  id="mobile-truck"
+                  className="w-48 h-48"
+                >
+                  <Image
+                    src="/doodles/moving-truck.svg"
+                    alt="Moving truck"
+                    width={200}
+                    height={200}
+                    className="w-full h-full opacity-90"
+                  />
+                </div>
+              </div>
+            </FadeIn>
           </div>
         </div>
 
@@ -171,81 +236,8 @@ export default function Home() {
       {/* Pricing Section */}
       <ReceiptTape />
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 px-6 bg-black relative overflow-hidden">
-        {/* Section Doodles */}
-        <SectionDoodles />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <FadeIn>
-            <div className="flex items-center gap-4 mb-6">
-              <span className="text-zinc-500 font-mono text-sm">[01]</span>
-              <span className="text-zinc-500 text-sm">How it works</span>
-            </div>
-          </FadeIn>
-
-          <FadeIn delay={0.1}>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 max-w-3xl">
-              Three steps to your<br />
-              <span className="text-zinc-500">stress-free move.</span>
-            </h2>
-          </FadeIn>
-
-          <FadeIn delay={0.2}>
-            <p className="text-zinc-400 text-lg mb-16 max-w-2xl">
-              No complicated booking systems. No waiting on hold. Just text us and we&apos;ll take care of everything.
-            </p>
-          </FadeIn>
-
-          <StaggerContainer className="grid md:grid-cols-3 gap-6" stagger={0.15} delay={0.1}>
-            {[
-              {
-                step: "01",
-                title: "Text Us",
-                description: "Send a text to (347) 617-2607. We respond within minutes, not hours.",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                ),
-              },
-              {
-                step: "02",
-                title: "Tell Us Your Situation",
-                description: "Share what you're moving, where you're going, and when works best for you.",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                ),
-              },
-              {
-                step: "03",
-                title: "We Handle The Rest",
-                description: "We show up on time, move everything carefully, and get you settled.",
-                icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                ),
-              },
-            ].map((item, index) => (
-              <div
-                key={index}
-                className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 hover:border-zinc-700 transition-colors"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 bg-yellow-400/10 rounded-xl flex items-center justify-center text-yellow-400">
-                    {item.icon}
-                  </div>
-                  <span className="text-zinc-600 font-mono text-sm">{item.step}</span>
-                </div>
-                <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                <p className="text-zinc-400 leading-relaxed">{item.description}</p>
-              </div>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
+      {/* How It Works Section - Zigzag Layout */}
+      <StepsZigzag />
 
       {/* CTA Section */}
       <section className="py-24 px-6">
