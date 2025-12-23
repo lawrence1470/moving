@@ -33,13 +33,16 @@ const testimonials = [
   },
 ];
 
-// Scattered positions for magnetic pull effect
-const scatteredPositions = [
-  { x: -350, y: -180, rotation: -45, scale: 0.5 },
-  { x: 380, y: -120, rotation: 40, scale: 0.55 },
-  { x: -300, y: 150, rotation: -35, scale: 0.5 },
-  { x: 320, y: 180, rotation: 50, scale: 0.55 },
-];
+// Get scattered positions based on viewport width
+const getScatteredPositions = (isMobile: boolean) => {
+  const scale = isMobile ? 0.55 : 1;
+  return [
+    { x: -350 * scale, y: -180 * scale, rotation: -45, scale: 0.5 },
+    { x: 380 * scale, y: -120 * scale, rotation: 40, scale: 0.55 },
+    { x: -300 * scale, y: 150 * scale, rotation: -35, scale: 0.5 },
+    { x: 320 * scale, y: 180 * scale, rotation: 50, scale: 0.55 },
+  ];
+};
 
 export default function TestimonialCards() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -58,7 +61,10 @@ export default function TestimonialCards() {
     const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
     const ctx = gsap.context(() => {
-      // Set initial scattered state
+      // Set initial scattered state with mobile-aware positions
+      const isMobile = window.innerWidth < 640;
+      const scatteredPositions = getScatteredPositions(isMobile);
+
       cards.forEach((card, index) => {
         const scattered = scatteredPositions[index];
         gsap.set(card, {
@@ -234,7 +240,9 @@ export default function TestimonialCards() {
         >
           {testimonials.map((testimonial, index) => {
             const totalCards = testimonials.length;
-            const cardOffset = (index - (totalCards - 1) / 2) * 160;
+            // Responsive card spacing: 80px on mobile, 160px on desktop
+            const cardSpacing = typeof window !== 'undefined' && window.innerWidth < 640 ? 80 : 160;
+            const cardOffset = (index - (totalCards - 1) / 2) * cardSpacing;
 
             return (
               <div

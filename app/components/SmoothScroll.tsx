@@ -15,11 +15,14 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // Detect mobile for optimized settings
+    const isMobile = window.innerWidth < 768;
+
     // Initialize Lenis with optimized settings for section transitions
     const lenis = new Lenis({
-      duration: 1.4, // Slightly longer for smoother deceleration
+      duration: isMobile ? 1.0 : 1.4, // Faster on mobile for better responsiveness
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease out
-      touchMultiplier: 1.5, // Reduced for more control on mobile
+      touchMultiplier: isMobile ? 1.0 : 1.5, // Lower on mobile for pinned sections
       infinite: false,
       smoothWheel: true,
       syncTouch: true, // Better touch synchronization

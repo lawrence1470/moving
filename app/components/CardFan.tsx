@@ -64,10 +64,14 @@ export default function CardFan() {
       const trackWidth = track.scrollWidth;
       const viewportWidth = window.innerWidth;
 
+      // Get actual card width from first card element
+      const firstCard = track.querySelector('.benefit-card') as HTMLElement;
+      const cardWidth = firstCard ? firstCard.offsetWidth : (viewportWidth < 640 ? 280 : 320);
+
       // Start: first card centered in viewport
       // End: last card centered in viewport
-      const startX = (viewportWidth - 320) / 2; // Center first card
-      const endX = -(trackWidth - (viewportWidth + 320) / 2); // Center last card
+      const startX = (viewportWidth - cardWidth) / 2; // Center first card
+      const endX = -(trackWidth - (viewportWidth + cardWidth) / 2); // Center last card
 
       // Clean up previous context
       if (ctx) ctx.revert();

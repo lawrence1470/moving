@@ -114,7 +114,7 @@ export default function ReceiptTape() {
         <div className="flex justify-center">
           <div
             ref={receiptRef}
-            className="bg-zinc-100 text-zinc-900 w-full max-w-sm border-4 border-black overflow-hidden"
+            className="bg-zinc-100 text-zinc-900 w-full max-w-[calc(100vw-48px)] sm:max-w-sm border-4 border-black overflow-hidden"
             style={{ fontFamily: "monospace", boxShadow: "8px 8px 0px 0px #000" }}
           >
             {/* Receipt Header */}
