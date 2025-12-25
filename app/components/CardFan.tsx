@@ -85,10 +85,10 @@ export default function CardFan() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: isMobile ? "+=80%" : "+=150%", // Shorter scroll distance on mobile
+            end: isMobile ? "+=60%" : "+=150%", // Shorter scroll distance on mobile for faster traversal
             pin: true,
             pinSpacing: true,
-            scrub: isMobile ? 0.3 : 0.5, // Faster scrub on mobile
+            scrub: isMobile ? 0.2 : 0.5, // Even faster scrub on mobile
             anticipatePin: 1,
             refreshPriority: 1,
           },
@@ -116,12 +116,22 @@ export default function CardFan() {
       }, section);
     };
 
+    // Throttled resize handler for better performance
+    let resizeTimeout: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        updateAnimation();
+      }, 150);
+    };
+
     // Run on mount and resize
     updateAnimation();
-    window.addEventListener("resize", updateAnimation);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", updateAnimation);
+      clearTimeout(resizeTimeout);
+      window.removeEventListener("resize", handleResize);
       if (ctx) ctx.revert();
     };
   }, []);

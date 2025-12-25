@@ -60,10 +60,10 @@ export default function ReceiptTape() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: isMobile ? "+=60%" : "+=100%", // Shorter scroll distance on mobile
+          end: isMobile ? "+=50%" : "+=100%", // Shorter scroll distance on mobile for faster traversal
           pin: true,
           pinSpacing: true,
-          scrub: isMobile ? 0.4 : 0.8, // Faster scrub on mobile
+          scrub: isMobile ? 0.3 : 0.8, // Faster scrub on mobile
           anticipatePin: 1,
           refreshPriority: -1, // Third pinned section - refresh last
           snap: {

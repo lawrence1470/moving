@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -50,6 +50,13 @@ export default function TestimonialCards() {
   const cardsRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
+  const [activeCardIndex, setActiveCardIndex] = useState<number | null>(null);
+
+  // Detect mobile on mount to avoid hydration mismatch
+  useEffect(() => {
+    setIsMobileView(window.innerWidth < 640);
+  }, []);
 
   // Magnetic pull scroll animation
   useEffect(() => {
@@ -81,10 +88,10 @@ export default function TestimonialCards() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: isMobile ? "+=60%" : "+=100%", // Shorter scroll distance on mobile
+          end: isMobile ? "+=50%" : "+=100%", // Shorter scroll distance on mobile for faster traversal
           pin: true,
           pinSpacing: true,
-          scrub: isMobile ? 0.4 : 0.8, // Faster scrub on mobile
+          scrub: isMobile ? 0.3 : 0.8, // Faster scrub on mobile
           anticipatePin: 1,
           refreshPriority: 0, // Second pinned section - default priority
           snap: {
@@ -131,7 +138,7 @@ export default function TestimonialCards() {
     return () => ctx.revert();
   }, []);
 
-  // Mouse interaction effects
+  // Mouse and touch interaction effects
   useEffect(() => {
     const container = containerRef.current;
     const cardsContainer = cardsRef.current;
@@ -139,15 +146,16 @@ export default function TestimonialCards() {
 
     const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
-    const handleMouseMove = (e: MouseEvent) => {
+    // Shared position handler for both mouse and touch
+    const handlePointerMove = (clientX: number, clientY: number) => {
       const rect = container.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
+      const pointerX = clientX - rect.left;
+      const pointerY = clientY - rect.top;
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
 
-      const offsetX = (mouseX - centerX) / centerX;
-      const offsetY = (mouseY - centerY) / centerY;
+      const offsetX = (pointerX - centerX) / centerX;
+      const offsetY = (pointerY - centerY) / centerY;
 
       cards.forEach((card, index) => {
         const baseRotation = (index - (cards.length - 1) / 2) * 12;
@@ -167,7 +175,17 @@ export default function TestimonialCards() {
       });
     };
 
-    const handleMouseLeave = () => {
+    const handleMouseMove = (e: MouseEvent) => {
+      handlePointerMove(e.clientX, e.clientY);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      handlePointerMove(touch.clientX, touch.clientY);
+    };
+
+    const handlePointerLeave = () => {
       cards.forEach((card, index) => {
         const baseRotation = (index - (cards.length - 1) / 2) * 12;
         gsap.to(card, {
@@ -180,17 +198,24 @@ export default function TestimonialCards() {
       });
     };
 
+    // Mouse events
     container.addEventListener("mousemove", handleMouseMove);
-    container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener("mouseleave", handlePointerLeave);
+
+    // Touch events with passive listeners for better scroll performance
+    container.addEventListener("touchmove", handleTouchMove, { passive: true });
+    container.addEventListener("touchend", handlePointerLeave, { passive: true });
 
     return () => {
       container.removeEventListener("mousemove", handleMouseMove);
-      container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener("mouseleave", handlePointerLeave);
+      container.removeEventListener("touchmove", handleTouchMove);
+      container.removeEventListener("touchend", handlePointerLeave);
     };
   }, [animationComplete]);
 
-  // Card hover effects
-  const handleCardHover = (index: number) => {
+  // Card hover/tap effects - unified for mouse and touch
+  const handleCardHover = useCallback((index: number) => {
     if (!animationComplete) return;
     const card = cardsRef.current?.querySelectorAll(".testimonial-card")[index];
     if (card) {
@@ -203,9 +228,10 @@ export default function TestimonialCards() {
         ease: "back.out(1.7)",
       });
     }
-  };
+    setActiveCardIndex(index);
+  }, [animationComplete]);
 
-  const handleCardLeave = (index: number) => {
+  const handleCardLeave = useCallback((index: number) => {
     if (!animationComplete) return;
     const card = cardsRef.current?.querySelectorAll(".testimonial-card")[index];
     if (card) {
@@ -219,7 +245,22 @@ export default function TestimonialCards() {
         ease: "elastic.out(1, 0.5)",
       });
     }
-  };
+    setActiveCardIndex(null);
+  }, [animationComplete]);
+
+  // Handle touch tap - toggle card state on mobile
+  const handleCardTap = useCallback((index: number) => {
+    if (!animationComplete) return;
+    if (activeCardIndex === index) {
+      handleCardLeave(index);
+    } else {
+      // Reset previous card if any
+      if (activeCardIndex !== null) {
+        handleCardLeave(activeCardIndex);
+      }
+      handleCardHover(index);
+    }
+  }, [animationComplete, activeCardIndex, handleCardHover, handleCardLeave]);
 
   return (
     <section ref={sectionRef} className="relative z-20 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex items-center" style={{ isolation: 'isolate' }}>
@@ -240,8 +281,8 @@ export default function TestimonialCards() {
         >
           {testimonials.map((testimonial, index) => {
             const totalCards = testimonials.length;
-            // Responsive card spacing: 80px on mobile, 160px on desktop
-            const cardSpacing = typeof window !== 'undefined' && window.innerWidth < 640 ? 80 : 160;
+            // Responsive card spacing: use state to avoid hydration mismatch
+            const cardSpacing = isMobileView ? 80 : 160;
             const cardOffset = (index - (totalCards - 1) / 2) * cardSpacing;
 
             return (
@@ -255,6 +296,7 @@ export default function TestimonialCards() {
                 }}
                 onMouseEnter={() => handleCardHover(index)}
                 onMouseLeave={() => handleCardLeave(index)}
+                onTouchStart={() => handleCardTap(index)}
               >
                 {/* Speech Bubble Card */}
                 <div className="relative">

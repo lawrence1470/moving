@@ -59,3 +59,44 @@ body {
     transform: translateX(3px) rotate(5deg);
   }
 }
+
+/* Mobile scroll performance optimizations */
+.benefit-card,
+.testimonial-card {
+  will-change: transform;
+  contain: layout style;
+}
+
+/* Pin spacer performance hints */
+.pin-spacer > * {
+  will-change: transform;
+}
+
+/* Touch action for horizontal scroll sections */
+.pin-spacer {
+  touch-action: pan-y;
+}
+
+/* Reduced motion support - respect user preferences */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable smooth scrolling */
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Disable all animations and transitions */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Remove will-change hints when animations disabled */
+  .benefit-card,
+  .testimonial-card,
+  .pin-spacer > * {
+    will-change: auto;
+  }
+}

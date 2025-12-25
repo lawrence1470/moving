@@ -15,17 +15,22 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
   const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // Detect mobile for optimized settings
     const isMobile = window.innerWidth < 768;
 
     // Initialize Lenis with optimized settings for section transitions
     const lenis = new Lenis({
-      duration: isMobile ? 1.0 : 1.4, // Faster on mobile for better responsiveness
+      duration: prefersReducedMotion ? 0 : (isMobile ? 0.8 : 1.4), // Even faster on mobile, instant if reduced motion
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease out
-      touchMultiplier: isMobile ? 2.0 : 1.5, // Higher on mobile for easier scrolling through pinned sections
+      touchMultiplier: isMobile ? 3.0 : 1.5, // Higher on mobile for faster pinned section traversal
+      wheelMultiplier: isMobile ? 1.0 : 0.8, // Better precision on desktop
       infinite: false,
       smoothWheel: true,
       syncTouch: true, // Better touch synchronization
+      orientation: 'vertical', // Prevent horizontal scroll capture
     });
 
     lenisRef.current = lenis;
@@ -41,10 +46,15 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
 
-    // Single refresh after everything initializes
+    // More robust refresh strategy - wait for fonts and initial layout
     const refreshTimer = setTimeout(() => {
       ScrollTrigger.refresh();
-    }, 150);
+    }, 200);
+
+    // Also refresh after fonts load for accurate measurements
+    document.fonts.ready.then(() => {
+      ScrollTrigger.refresh();
+    });
 
     return () => {
       clearTimeout(refreshTimer);
