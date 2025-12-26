@@ -92,44 +92,60 @@ export default function ReceiptTape() {
         .to(footer, { opacity: 1, duration: 0.2, ease: "power2.out" });
     });
 
-    // MOBILE: Simple fade-in, no pinning, native scroll
+    // MOBILE: Premium coordinated timeline animation
     mm.add("(max-width: 767px)", () => {
-      // Reset all elements to visible state
-      gsap.set(header, { opacity: 1, y: 0 });
-      gsap.set(receipt, { opacity: 1, y: 0, scale: 1 });
-      gsap.set(itemRefs.current, { opacity: 1, x: 0 });
-      gsap.set(totalEl, { opacity: 1, scale: 1 });
-      gsap.set(footer, { opacity: 1 });
+      // Set initial states for coordinated animation
+      gsap.set(header, { opacity: 0, y: 25 });
+      gsap.set(receipt, { opacity: 0, y: 40, scale: 0.97 });
+      gsap.set(itemRefs.current.filter(Boolean), { opacity: 0, x: -15 });
+      gsap.set(totalEl, { opacity: 0, scale: 0.9 });
+      gsap.set(footer, { opacity: 0 });
 
-      // Simple section fade-in
-      gsap.fromTo(section,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.6,
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      // Create coordinated timeline for smooth reveal
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 70%",
+          toggleActions: "play none none reverse",
+        },
+      });
 
-      // Staggered receipt elements fade-in
-      gsap.fromTo(receipt,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: receipt,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      // Header first
+      tl.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      })
+      // Receipt slides up with scale
+      .to(receipt, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.9,
+        ease: "power3.out",
+      }, "-=0.5")
+      // Line items stagger in
+      .to(itemRefs.current.filter(Boolean), {
+        opacity: 1,
+        x: 0,
+        duration: 0.6,
+        stagger: 0.08,
+        ease: "power2.out",
+      }, "-=0.4")
+      // Total pops in
+      .to(totalEl, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.5)",
+      }, "-=0.2")
+      // Footer fades in last
+      .to(footer, {
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.out",
+      }, "-=0.2");
     });
 
     return () => mm.revert();

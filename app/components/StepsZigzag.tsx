@@ -182,49 +182,80 @@ export default function StepsZigzag() {
       });
     });
 
-    // MOBILE: Simple fade-in, no pinning, native scroll
+    // MOBILE: Premium step-by-step reveal with coordinated elements
     mm.add("(max-width: 767px)", () => {
-      // Reset all elements to visible state
-      gsap.set(header, { opacity: 1, y: 0 });
-      gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
-      gsap.set(numbers, { scale: 1, opacity: 0.2 });
-      gsap.set(icons, { scale: 1, rotation: 0 });
+      // Set initial states for animation
+      gsap.set(header, { opacity: 0, y: 25 });
+      gsap.set(cards, { opacity: 0, y: 35, scale: 0.97 });
+      gsap.set(numbers, { scale: 0.8, opacity: 0 });
+      gsap.set(icons, { scale: 0.8, opacity: 0 });
 
       if (mobileDottedLine) {
-        gsap.set(mobileDottedLine, { opacity: 0.6, scaleY: 1 });
+        gsap.set(mobileDottedLine, { opacity: 0, scaleY: 0, transformOrigin: "top center" });
       }
 
-      // Simple section fade-in
-      gsap.fromTo(section,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.6,
+      // Header fades in first
+      gsap.to(header, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 70%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      // Dotted line draws down smoothly
+      if (mobileDottedLine) {
+        gsap.to(mobileDottedLine, {
+          opacity: 0.6,
+          scaleY: 1,
+          duration: 1.2,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: section,
+            start: "top 65%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      }
+
+      // Each card animates with its own timeline as it enters
+      cards.forEach((card, index) => {
+        if (!card) return;
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
             start: "top 80%",
             toggleActions: "play none none reverse",
           },
-        }
-      );
+        });
 
-      // Staggered cards fade-in
-      cards.forEach((card, index) => {
-        if (!card) return;
-        gsap.fromTo(card,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
+        // Card slides up
+        tl.to(card, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "power3.out",
+        })
+        // Number stamps in
+        .to(numbers[index], {
+          scale: 1,
+          opacity: 0.2,
+          duration: 0.4,
+          ease: "back.out(2)",
+        }, "-=0.5")
+        // Icon pops in
+        .to(icons[index], {
+          scale: 1,
+          opacity: 1,
+          duration: 0.4,
+          ease: "back.out(1.5)",
+        }, "-=0.3");
       });
 
       // Mark animation complete for mobile interactions

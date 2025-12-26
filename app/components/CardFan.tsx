@@ -103,47 +103,52 @@ export default function CardFan() {
       }
     });
 
-    // MOBILE: Simple staggered fade-in, no pinning, native scroll
+    // MOBILE: Premium staggered fade-in with longer durations
     mm.add("(max-width: 767px)", () => {
       const cardElements = track.querySelectorAll('.benefit-card');
 
-      // Reset track position for mobile horizontal scroll
+      // Reset track position for mobile
       gsap.set(track, { x: 0 });
 
-      // Fade in cards as they enter viewport
-      cardElements.forEach((card, index) => {
-        gsap.fromTo(card,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
-      });
-
-      // Simple header fade
+      // Header fades in first with longer duration
       if (headerRef.current) {
         gsap.fromTo(headerRef.current,
-          { opacity: 0, y: 20 },
+          { opacity: 0, y: 25 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.6,
+            duration: 0.9,
+            ease: "power3.out",
             scrollTrigger: {
               trigger: section,
-              start: "top 80%",
+              start: "top 70%",
               toggleActions: "play none none reverse",
             },
           }
         );
       }
+
+      // Cards fade in with coordinated stagger and subtle scale
+      gsap.fromTo(cardElements,
+        {
+          opacity: 0,
+          y: 40,
+          scale: 0.96,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: track,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
     });
 
     return () => mm.revert();

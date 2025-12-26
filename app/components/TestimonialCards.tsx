@@ -135,32 +135,50 @@ export default function TestimonialCards() {
       }
     });
 
-    // MOBILE: Simple fade-in, no pinning, native scroll
+    // MOBILE: Premium cascade animation with staggered cards
     mm.add("(max-width: 767px)", () => {
-      // Reset cards to visible state for mobile
-      cards.forEach((card) => {
+      // Set initial states - cards start hidden with subtle rotation
+      cards.forEach((card, index) => {
         gsap.set(card, {
           x: 0,
           y: 0,
-          rotation: 0,
-          scale: 1,
-          opacity: 1,
+          rotation: (index - (cards.length - 1) / 2) * 3,
+          scale: 0.95,
+          opacity: 0,
         });
       });
 
-      // Simple section fade-in
-      gsap.fromTo(section,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.6,
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      // Header fades in first
+      if (headerRef.current) {
+        gsap.fromTo(headerRef.current,
+          { opacity: 0, y: 25 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 70%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+
+      // Cards cascade in with stagger
+      gsap.to(cards, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.8,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: cardsContainer,
+          start: "top 75%",
+          toggleActions: "play none none reverse",
+        },
+      });
 
       // Mark animation complete for mobile interactions
       setAnimationComplete(true);
