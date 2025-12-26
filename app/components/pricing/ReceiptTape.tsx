@@ -45,9 +45,13 @@ export default function ReceiptTape() {
     const footer = footerRef.current;
     if (!section || !receipt || !header || !totalEl || !footer) return;
 
-    const ctx = gsap.context(() => {
-      const isMobile = window.innerWidth < 768;
+    // Save styles to prevent contamination between breakpoints
+    ScrollTrigger.saveStyles([header, receipt, totalEl, footer, ...itemRefs.current.filter(Boolean)]);
 
+    const mm = gsap.matchMedia();
+
+    // DESKTOP: Full pinned animation sequence
+    mm.add("(min-width: 768px)", () => {
       // Set initial states
       gsap.set(header, { opacity: 0, y: -30 });
       gsap.set(receipt, { opacity: 0, y: 50, scale: 0.9 });
@@ -60,12 +64,12 @@ export default function ReceiptTape() {
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: isMobile ? "+=50%" : "+=100%", // Shorter scroll distance on mobile for faster traversal
+          end: "+=100%",
           pin: true,
           pinSpacing: true,
-          scrub: isMobile ? 0.3 : 0.8, // Faster scrub on mobile
+          scrub: 0.8,
           anticipatePin: 1,
-          refreshPriority: -1, // Third pinned section - refresh last
+          refreshPriority: -1,
           snap: {
             snapTo: 1,
             duration: { min: 0.2, max: 0.5 },
@@ -77,26 +81,58 @@ export default function ReceiptTape() {
 
       // Animation sequence
       tl
-        // Header fades in
         .to(header, { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" })
-        // Receipt slides up
         .to(receipt, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.4)" })
-        // Items appear one by one
         .to(itemRefs.current[0], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" })
         .to(itemRefs.current[1], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" }, "-=0.05")
         .to(itemRefs.current[2], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" }, "-=0.05")
         .to(itemRefs.current[3], { opacity: 1, x: 0, duration: 0.15, ease: "power2.out" }, "-=0.05")
-        // Pause for effect
         .to({}, { duration: 0.1 })
-        // Total pops in
         .to(totalEl, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" })
-        // Footer fades in
         .to(footer, { opacity: 1, duration: 0.2, ease: "power2.out" });
-    }, section);
+    });
 
-    return () => {
-      ctx.revert();
-    };
+    // MOBILE: Simple fade-in, no pinning, native scroll
+    mm.add("(max-width: 767px)", () => {
+      // Reset all elements to visible state
+      gsap.set(header, { opacity: 1, y: 0 });
+      gsap.set(receipt, { opacity: 1, y: 0, scale: 1 });
+      gsap.set(itemRefs.current, { opacity: 1, x: 0 });
+      gsap.set(totalEl, { opacity: 1, scale: 1 });
+      gsap.set(footer, { opacity: 1 });
+
+      // Simple section fade-in
+      gsap.fromTo(section,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // Staggered receipt elements fade-in
+      gsap.fromTo(receipt,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: receipt,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    });
+
+    return () => mm.revert();
   }, [isClient]);
 
   return (

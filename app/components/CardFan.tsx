@@ -51,89 +51,102 @@ export default function CardFan() {
   const trackRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll-triggered horizontal train animation
+  // Scroll-triggered animation with matchMedia for responsive behavior
   useEffect(() => {
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!section || !track) return;
 
-    let ctx: gsap.Context;
+    // Save styles to prevent contamination between breakpoints
+    ScrollTrigger.saveStyles([track, headerRef.current]);
 
-    // Calculate how far to move the track
-    const updateAnimation = () => {
+    const mm = gsap.matchMedia();
+
+    // DESKTOP: Full horizontal scroll with pinning
+    mm.add("(min-width: 768px)", () => {
       const trackWidth = track.scrollWidth;
       const viewportWidth = window.innerWidth;
-      const isMobile = viewportWidth < 768;
-
-      // Get actual card width from first card element
       const firstCard = track.querySelector('.benefit-card') as HTMLElement;
-      const cardWidth = firstCard ? firstCard.offsetWidth : (viewportWidth < 640 ? 280 : 320);
+      const cardWidth = firstCard ? firstCard.offsetWidth : 320;
 
-      // Start: first card centered in viewport
-      // End: last card centered in viewport
-      const startX = (viewportWidth - cardWidth) / 2; // Center first card
-      const endX = -(trackWidth - (viewportWidth + cardWidth) / 2); // Center last card
+      const startX = (viewportWidth - cardWidth) / 2;
+      const endX = -(trackWidth - (viewportWidth + cardWidth) / 2);
 
-      // Clean up previous context
-      if (ctx) ctx.revert();
+      gsap.set(track, { x: startX });
 
-      ctx = gsap.context(() => {
-        // Start with first card centered
-        gsap.set(track, { x: startX });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "+=150%",
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+          refreshPriority: 1,
+        },
+      });
 
-        const tl = gsap.timeline({
+      tl.to(track, { x: endX, ease: "none" });
+
+      if (headerRef.current) {
+        gsap.to(headerRef.current, {
+          opacity: 0.3,
+          y: -20,
           scrollTrigger: {
             trigger: section,
-            start: "top top",
-            end: isMobile ? "+=60%" : "+=150%", // Shorter scroll distance on mobile for faster traversal
-            pin: true,
-            pinSpacing: true,
-            scrub: isMobile ? 0.2 : 0.5, // Even faster scrub on mobile
-            anticipatePin: 1,
-            refreshPriority: 1,
+            start: "80% top",
+            end: "100% top",
+            scrub: true,
           },
         });
+      }
+    });
 
-        // Slide to show all cards, ending with last card visible
-        tl.to(track, {
-          x: endX,
-          ease: "none",
-        });
+    // MOBILE: Simple staggered fade-in, no pinning, native scroll
+    mm.add("(max-width: 767px)", () => {
+      const cardElements = track.querySelectorAll('.benefit-card');
 
-        // Exit animation - fade header as section ends
-        if (headerRef.current) {
-          gsap.to(headerRef.current, {
-            opacity: 0.3,
-            y: -20,
+      // Reset track position for mobile horizontal scroll
+      gsap.set(track, { x: 0 });
+
+      // Fade in cards as they enter viewport
+      cardElements.forEach((card, index) => {
+        gsap.fromTo(card,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+
+      // Simple header fade
+      if (headerRef.current) {
+        gsap.fromTo(headerRef.current,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
             scrollTrigger: {
               trigger: section,
-              start: "80% top",
-              end: "100% top",
-              scrub: true,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
             },
-          });
-        }
-      }, section);
-    };
+          }
+        );
+      }
+    });
 
-    // Throttled resize handler for better performance
-    let resizeTimeout: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        updateAnimation();
-      }, 150);
-    };
-
-    // Run on mount and resize
-    updateAnimation();
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      clearTimeout(resizeTimeout);
-      window.removeEventListener("resize", handleResize);
-      if (ctx) ctx.revert();
-    };
+    return () => mm.revert();
   }, []);
 
   const getCardStyles = (color: string) => {
@@ -176,11 +189,11 @@ export default function CardFan() {
   return (
     <section
       ref={sectionRef}
-      className="relative z-10 min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex flex-col justify-center"
+      className="relative z-10 min-h-screen md:min-h-screen bg-black border-t-4 border-yellow-400 overflow-hidden flex flex-col justify-center py-16 md:py-0"
       style={{ isolation: 'isolate' }}
     >
-      {/* Section Header - Absolutely positioned at top */}
-      <div ref={headerRef} className="absolute top-20 md:top-24 left-4 md:left-6 z-20">
+      {/* Section Header - Responsive positioning */}
+      <div ref={headerRef} className="relative md:absolute top-0 md:top-24 left-0 md:left-6 z-20 px-4 md:px-0 mb-8 md:mb-0">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-12 h-1 bg-yellow-400" />
           <span className="font-mono text-sm text-zinc-500">[WHY US]</span>
@@ -192,12 +205,12 @@ export default function CardFan() {
         </h2>
       </div>
 
-      {/* Cards Track - Vertically centered */}
-      <div className="w-full overflow-visible">
+      {/* Cards - Vertical stack on mobile, horizontal track on desktop */}
+      <div className="w-full overflow-visible md:overflow-visible px-4 md:px-0">
         <div ref={cardsRef} className="overflow-visible flex items-center">
           <div
             ref={trackRef}
-            className="flex gap-4 sm:gap-6 w-max"
+            className="flex flex-col md:flex-row gap-4 sm:gap-6 w-full md:w-max mx-auto md:mx-0"
           >
           {cards.map((card) => {
             const styles = getCardStyles(card.color);
@@ -206,7 +219,7 @@ export default function CardFan() {
               <div
                 key={card.id}
                 className={`benefit-card ${styles.bg} ${styles.border} border-4 p-5 sm:p-6
-                  w-[280px] sm:w-[320px] flex-shrink-0
+                  w-full md:w-[320px] flex-shrink-0
                 `}
                 style={{ boxShadow: '6px 6px 0px 0px #000' }}
               >

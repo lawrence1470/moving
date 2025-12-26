@@ -21,16 +21,16 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     // Detect mobile for optimized settings
     const isMobile = window.innerWidth < 768;
 
-    // Initialize Lenis with optimized settings for section transitions
+    // Initialize Lenis with optimized settings
+    // On mobile: use native touch feel (smoothTouch: false) since we disable pinned sections
     const lenis = new Lenis({
-      duration: prefersReducedMotion ? 0 : (isMobile ? 0.8 : 1.4), // Even faster on mobile, instant if reduced motion
+      duration: prefersReducedMotion ? 0 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease out
-      touchMultiplier: isMobile ? 3.0 : 1.5, // Higher on mobile for faster pinned section traversal
-      wheelMultiplier: isMobile ? 1.0 : 0.8, // Better precision on desktop
-      infinite: false,
       smoothWheel: true,
-      syncTouch: true, // Better touch synchronization
-      orientation: 'vertical', // Prevent horizontal scroll capture
+      smoothTouch: false, // CRITICAL: Preserve native touch scroll feel on mobile
+      touchMultiplier: 1, // Default - let native scroll handle touch
+      infinite: false,
+      orientation: 'vertical',
     });
 
     lenisRef.current = lenis;

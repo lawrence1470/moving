@@ -90,7 +90,7 @@ export default function StepsZigzag() {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [animationComplete, setAnimationComplete] = useState(false);
 
-  // Main scrub-controlled animation
+  // Main scrub-controlled animation with matchMedia for responsive behavior
   useEffect(() => {
     const section = sectionRef.current;
     const header = headerRef.current;
@@ -102,13 +102,16 @@ export default function StepsZigzag() {
 
     if (!section || !header || cards.length === 0) return;
 
-    const ctx = gsap.context(() => {
-      const isMobile = window.innerWidth < 768;
+    // Save styles to prevent contamination between breakpoints
+    ScrollTrigger.saveStyles([header, dottedLine, mobileDottedLine, ...cards, ...numbers, ...icons].filter(Boolean));
 
+    const mm = gsap.matchMedia();
+
+    // DESKTOP: Full pinned animation with scrub
+    mm.add("(min-width: 768px)", () => {
       // Set initial states
       gsap.set(header, { opacity: 0, y: 30 });
 
-      // Set up dotted line animation (desktop) - use clip path for draw effect
       if (dottedLine) {
         gsap.set(dottedLine, {
           opacity: 0,
@@ -117,22 +120,9 @@ export default function StepsZigzag() {
         });
       }
 
-      // Set up dotted line animation (mobile) - vertical line
-      if (mobileDottedLine) {
-        gsap.set(mobileDottedLine, {
-          opacity: 0,
-          scaleY: 0,
-          transformOrigin: "top center",
-        });
-      }
-
-      cards.forEach((card, index) => {
+      cards.forEach((card) => {
         if (!card) return;
-        gsap.set(card, {
-          opacity: 0,
-          y: 40,
-          scale: 0.9,
-        });
+        gsap.set(card, { opacity: 0, y: 40, scale: 0.9 });
       });
 
       numbers.forEach((num) => {
@@ -145,19 +135,19 @@ export default function StepsZigzag() {
         gsap.set(icon, { scale: 0, rotation: -180 });
       });
 
-      // Create master timeline with pinned scrub (like other sections)
+      // Create master timeline with pinned scrub
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: isMobile ? "+=60%" : "+=150%", // Shorter scroll distance on mobile for faster traversal
+          end: "+=150%",
           pin: true,
           pinSpacing: true,
-          scrub: isMobile ? 0.3 : 0.8, // Faster scrub on mobile
+          scrub: 0.8,
           anticipatePin: 1,
-          refreshPriority: -2, // Fourth pinned section - refresh after ReceiptTape (-1)
+          refreshPriority: -2,
           snap: {
-            snapTo: [0, 1], // Snap to start or end only
+            snapTo: [0, 1],
             duration: { min: 0.2, max: 0.6 },
             delay: 0.1,
             ease: "power2.inOut",
@@ -168,31 +158,11 @@ export default function StepsZigzag() {
       });
 
       // Header fades in first
-      tl.to(header, {
-        opacity: 1,
-        y: 0,
-        duration: 0.3,
-        ease: "power2.out",
-      });
+      tl.to(header, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
 
-      // Dotted line draws in (desktop) - scale from left to right
+      // Dotted line draws in
       if (dottedLine) {
-        tl.to(dottedLine, {
-          opacity: 1,
-          scaleX: 1,
-          duration: 0.5,
-          ease: "power2.out",
-        }, 0.25);
-      }
-
-      // Dotted line draws in (mobile) - scale from top to bottom
-      if (mobileDottedLine) {
-        tl.to(mobileDottedLine, {
-          opacity: 1,
-          scaleY: 1,
-          duration: 0.5,
-          ease: "power2.out",
-        }, 0.25);
+        tl.to(dottedLine, { opacity: 1, scaleX: 1, duration: 0.5, ease: "power2.out" }, 0.25);
       }
 
       // Cards appear with staggered timing
@@ -200,39 +170,68 @@ export default function StepsZigzag() {
         if (!card) return;
         const progress = index / cards.length;
 
-        // Card slides up and scales
-        tl.to(card, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.4,
-          ease: "back.out(1.7)",
-        }, 0.3 + progress * 0.4);
+        tl.to(card, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.7)" }, 0.3 + progress * 0.4);
 
-        // Number stamps in with overshoot
         if (numbers[index]) {
-          tl.to(numbers[index], {
-            scale: 1,
-            opacity: 0.2,
-            duration: 0.25,
-            ease: "back.out(3)",
-          }, 0.4 + progress * 0.4);
+          tl.to(numbers[index], { scale: 1, opacity: 0.2, duration: 0.25, ease: "back.out(3)" }, 0.4 + progress * 0.4);
         }
 
-        // Icons spin in
         if (icons[index]) {
-          tl.to(icons[index], {
-            scale: 1,
-            rotation: 0,
-            duration: 0.35,
-            ease: "back.out(2)",
-          }, 0.45 + progress * 0.4);
+          tl.to(icons[index], { scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2)" }, 0.45 + progress * 0.4);
         }
       });
+    });
 
-    }, section);
+    // MOBILE: Simple fade-in, no pinning, native scroll
+    mm.add("(max-width: 767px)", () => {
+      // Reset all elements to visible state
+      gsap.set(header, { opacity: 1, y: 0 });
+      gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
+      gsap.set(numbers, { scale: 1, opacity: 0.2 });
+      gsap.set(icons, { scale: 1, rotation: 0 });
 
-    return () => ctx.revert();
+      if (mobileDottedLine) {
+        gsap.set(mobileDottedLine, { opacity: 0.6, scaleY: 1 });
+      }
+
+      // Simple section fade-in
+      gsap.fromTo(section,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // Staggered cards fade-in
+      cards.forEach((card, index) => {
+        if (!card) return;
+        gsap.fromTo(card,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 90%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+
+      // Mark animation complete for mobile interactions
+      setAnimationComplete(true);
+    });
+
+    return () => mm.revert();
   }, []); // Run once on mount - layout is handled by Tailwind responsive classes
 
   // Gentle floating idle animation (after scroll animation completes)

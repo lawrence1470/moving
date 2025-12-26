@@ -58,7 +58,7 @@ export default function TestimonialCards() {
     setIsMobileView(window.innerWidth < 640);
   }, []);
 
-  // Magnetic pull scroll animation
+  // Scroll animation with matchMedia for responsive behavior
   useEffect(() => {
     const section = sectionRef.current;
     const container = containerRef.current;
@@ -67,10 +67,14 @@ export default function TestimonialCards() {
 
     const cards = cardsContainer.querySelectorAll(".testimonial-card");
 
-    const ctx = gsap.context(() => {
-      // Set initial scattered state with mobile-aware positions
-      const isMobile = window.innerWidth < 640;
-      const scatteredPositions = getScatteredPositions(isMobile);
+    // Save styles to prevent contamination between breakpoints
+    ScrollTrigger.saveStyles(cards);
+
+    const mm = gsap.matchMedia();
+
+    // DESKTOP: Full magnetic pull animation with pinning
+    mm.add("(min-width: 768px)", () => {
+      const scatteredPositions = getScatteredPositions(false);
 
       cards.forEach((card, index) => {
         const scattered = scatteredPositions[index];
@@ -83,17 +87,16 @@ export default function TestimonialCards() {
         });
       });
 
-      // Create magnetic pull timeline
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: isMobile ? "+=50%" : "+=100%", // Shorter scroll distance on mobile for faster traversal
+          end: "+=100%",
           pin: true,
           pinSpacing: true,
-          scrub: isMobile ? 0.3 : 0.8, // Faster scrub on mobile
+          scrub: 0.8,
           anticipatePin: 1,
-          refreshPriority: 0, // Second pinned section - default priority
+          refreshPriority: 0,
           snap: {
             snapTo: 1,
             duration: { min: 0.2, max: 0.5 },
@@ -105,10 +108,8 @@ export default function TestimonialCards() {
         },
       });
 
-      // Animate each card to its position
       cards.forEach((card, index) => {
-        const baseRotation = (index - (cards.length - 1) / 2) * 12; // More spread
-
+        const baseRotation = (index - (cards.length - 1) / 2) * 12;
         tl.to(card, {
           x: 0,
           y: 0,
@@ -120,7 +121,6 @@ export default function TestimonialCards() {
         }, index * 0.1);
       });
 
-      // Exit animation - fade header as section ends
       if (headerRef.current) {
         gsap.to(headerRef.current, {
           opacity: 0.3,
@@ -133,9 +133,40 @@ export default function TestimonialCards() {
           },
         });
       }
-    }, section);
+    });
 
-    return () => ctx.revert();
+    // MOBILE: Simple fade-in, no pinning, native scroll
+    mm.add("(max-width: 767px)", () => {
+      // Reset cards to visible state for mobile
+      cards.forEach((card) => {
+        gsap.set(card, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scale: 1,
+          opacity: 1,
+        });
+      });
+
+      // Simple section fade-in
+      gsap.fromTo(section,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
+      // Mark animation complete for mobile interactions
+      setAnimationComplete(true);
+    });
+
+    return () => mm.revert();
   }, []);
 
   // Mouse and touch interaction effects
