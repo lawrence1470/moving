@@ -22,15 +22,13 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const isMobile = window.innerWidth < 768;
 
     // Initialize Lenis with optimized settings
-    // On mobile: use native touch feel (smoothTouch: false) since we disable pinned sections
+    // On mobile: use native touch feel (syncTouch: false) since we disable pinned sections
     const lenis = new Lenis({
       duration: prefersReducedMotion ? 0 : 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease out
       smoothWheel: true,
-      smoothTouch: false, // CRITICAL: Preserve native touch scroll feel on mobile
+      syncTouch: false, // CRITICAL: Preserve native touch scroll feel on mobile
       touchMultiplier: 1, // Default - let native scroll handle touch
-      infinite: false,
-      orientation: 'vertical',
     });
 
     lenisRef.current = lenis;
